@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {hot} from 'react-hot-loader/root';
 
-class App extends React.Component {
+export class App extends React.Component {
   render() {
-    return <></>;
+    return <>Play With Your Friends</>;
   }
 }
 
