@@ -2,6 +2,8 @@ import * as React from 'react';
 import logo from '../../images/logo.svg';
 import {Formik} from 'formik';
 import {useParams} from 'react-router-dom';
+import {TextInput} from '../../components/form/TextInput';
+import {Button} from '../../components/Button';
 
 const NAME_REGEX = /[a-zA-Z0-9_!?]{3,12}/;
 const ROOM_REGEX = /[0-9]{6}/;
@@ -50,11 +52,10 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
               <label htmlFor="name" className="">
                 Your Name
               </label>
-              <input
-                type="text"
+              <TextInput
                 id="name"
                 name="name"
-                className="text-center rounded text"
+                className="text-center"
                 autoComplete="off"
                 autoCorrect="off"
                 maxLength={12}
@@ -68,12 +69,11 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
               <label htmlFor="name" className="">
                 Room Code
               </label>
-              <input
-                type="text"
+              <TextInput
                 id="roomCode"
                 name="roomCode"
                 pattern="[0-9]*"
-                className="text-lg tracking-widest text-center rounded"
+                className="tracking-widest text-center"
                 placeholder="000000"
                 value={values.roomCode}
                 onBlur={handleBlur}
@@ -81,13 +81,13 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
               />
             </fieldset>
             <fieldset className="pt-4">
-              <button
+              <Button
                 type="submit"
-                className="block w-full p-2 text-xl text-white bg-black rounded font-title disabled:bg-gray-500 disabled:text-gray-300"
                 disabled={isSubmitting || !isValid}
+                fullWidth
               >
                 Join Room
-              </button>
+              </Button>
             </fieldset>
           </form>
         )}
