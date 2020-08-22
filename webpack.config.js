@@ -34,6 +34,12 @@ const config = {
         loader: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.(jpg|png|svg)$/,
+        use: {
+          loader: 'url-loader',
+        },
+      },
     ],
   },
   resolve: {
@@ -50,6 +56,7 @@ const config = {
   ],
   devServer: {
     contentBase: './dist',
+    historyApiFallback: true,
   },
 };
 
