@@ -14,7 +14,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => (
   <button
     className={classnames(
-      'block p-2 text-lg text-white bg-black rounded font-title disabled:bg-gray-500 disabled:text-gray-300',
+      'block p-2 text-lg text-white bg-cta rounded font-title hover:bg-cta-dark hover:text-white',
       {
         'w-full': fullWidth,
       },

@@ -49,8 +49,8 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
           isValid,
         }) => (
           <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
-            <fieldset className="flex flex-col">
-              <label htmlFor="name" className="">
+            <fieldset className="flex flex-col space-y-1">
+              <label htmlFor="name" className="text-white">
                 Your Name
               </label>
               <TextInput
@@ -66,8 +66,8 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
                 onChange={handleChange}
               />
             </fieldset>
-            <fieldset className="flex flex-col">
-              <label htmlFor="name" className="">
+            <fieldset className="flex flex-col space-y-1">
+              <label htmlFor="name" className="text-white">
                 Room Code
               </label>
               <TextInput
