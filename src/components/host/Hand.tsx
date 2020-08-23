@@ -1623,9 +1623,9 @@ export const Hand: React.FC<HandProps> = ({roomCode}) => (
             fill="#7F88AD"
             xmlSpace="preserve"
             style={{whiteSpace: 'pre'}}
-            font-family="Bungee"
-            font-size="26"
-            letter-spacing="0em"
+            fontFamily="Bungee"
+            fontSize="26"
+            letterSpacing="0em"
           >
             <tspan x="124.318" y="107.36">
               pwyf.app
@@ -1637,9 +1637,9 @@ export const Hand: React.FC<HandProps> = ({roomCode}) => (
           fill="black"
           xmlSpace="preserve"
           style={{whiteSpace: 'pre'}}
-          font-family="Bungee"
-          font-size="36"
-          letter-spacing="0em"
+          fontFamily="Bungee"
+          fontSize="36"
+          letterSpacing="0em"
         >
           <tspan x="119.117" y="167.96">
             {roomCode}
@@ -1648,12 +1648,12 @@ export const Hand: React.FC<HandProps> = ({roomCode}) => (
         <text
           id="visit"
           fill="#7F88AD"
-          fill-opacity="0.6"
+          fillOpacity="0.6"
           xmlSpace="preserve"
           style={{whiteSpace: 'pre'}}
-          font-family="Bungee"
-          font-size="12"
-          letter-spacing="0em"
+          fontFamily="Bungee"
+          fontSize="12"
+          letterSpacing="0em"
         >
           <tspan x="171.012" y="85.32">
             visit
@@ -1662,12 +1662,12 @@ export const Hand: React.FC<HandProps> = ({roomCode}) => (
         <text
           id="enter code"
           fill="black"
-          fill-opacity="0.6"
+          fillOpacity="0.6"
           xmlSpace="preserve"
           style={{whiteSpace: 'pre'}}
-          font-family="Bungee"
-          font-size="12"
-          letter-spacing="0em"
+          fontFamily="Bungee"
+          fontSize="12"
+          letterSpacing="0em"
         >
           <tspan x="152.322" y="137.32">
             enter code

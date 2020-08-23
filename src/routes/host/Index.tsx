@@ -1,30 +1,29 @@
 import * as React from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
-  useRouteMatch,
   Redirect,
+  Route,
+  Switch,
+  useRouteMatch,
 } from 'react-router-dom';
-import {Hand} from '../../components/host/Hand';
-import {Avatar} from '../../components/avatars/Avatar';
 
-interface Player {
-  id: string;
-  name: string;
-  avatar: number;
-}
+import {Avatar} from '../../components/avatars/Avatar';
+import {Hand} from '../../components/host/Hand';
+import {HostActionType} from '../../data/host/actions';
+import * as Selectors from '../../data/host/selectors';
 
 export const Host: React.FC = () => {
   let {path} = useRouteMatch();
-  const roomCode = '12345';
-  const players: Array<Player | null> = [
-    {
-      id: '0',
-      name: 'MATTHEW',
-      avatar: 1,
-    },
-  ];
+  const roomCode = useSelector(Selectors.roomCode);
+  const players = useSelector(Selectors.players);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (!roomCode) {
+      dispatch({type: HostActionType.SET_ROOM_CODE, data: {roomCode: '12345'}});
+    }
+  }, []);
 
   return (
     <main className="flex w-screen h-screen bg-forward-slices overflow-none">
@@ -44,7 +43,7 @@ export const Host: React.FC = () => {
         </ul>
       </div>
       <div className="flex-shrink w-1/3">
-        <Hand roomCode={roomCode} />
+        {roomCode ? <Hand roomCode={roomCode} /> : null}
       </div>
     </main>
   );

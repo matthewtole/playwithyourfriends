@@ -1,15 +1,39 @@
-import {HostAction} from './actions';
+import {HostAction, HostActionType, SetRoomCodeAction} from './actions';
 
-export interface HostState {}
+export interface Player {
+  id: string;
+  name: string;
+  avatar: number;
+}
 
-const initialState: HostState = {};
+export interface HostState {
+  roomCode?: string;
+  players?: ReadonlyArray<Player>;
+}
+
+export const initialState: HostState = {};
+
+function handleSetRoomCode(
+  state: HostState,
+  data: SetRoomCodeAction['data']
+): HostState {
+  return {
+    ...state,
+    roomCode: data.roomCode,
+  };
+}
 
 export default function reducer(
-  state: HostState | undefined,
+  state: Readonly<HostState> | undefined,
   action: HostAction
-): HostState {
+): Readonly<HostState> {
   if (!state) {
     return initialState;
   }
-  return state;
+  switch (action.type) {
+    case HostActionType.SET_ROOM_CODE:
+      return handleSetRoomCode(state, action.data);
+    default:
+      return state;
+  }
 }
