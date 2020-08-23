@@ -18,6 +18,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.4.0",
     "classnames": "^2.2.6",
     "formik": "^2.1.5",
     "react": "^16.13.1",

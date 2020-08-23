@@ -1670,7 +1670,7 @@ export const Hand: React.FC<HandProps> = ({roomCode}) => (
           letterSpacing="0em"
         >
           <tspan x="152.322" y="137.32">
-            enter code
+            Enter Code
           </tspan>
         </text>
         <image

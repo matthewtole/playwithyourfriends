@@ -1,7 +1,17 @@
-import {createStore} from 'redux';
+import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
+
 import rootReducer from './reducer';
-import {composeWithDevTools} from 'redux-devtools-extension';
 
-const store = createStore(rootReducer, composeWithDevTools());
+export default function createStore() {
+  const store = configureStore({
+    reducer: rootReducer,
+    middleware: [...getDefaultMiddleware()],
+    enhancers: [],
+  });
 
-export default store;
+  if (process.env.NODE_ENV !== 'production' && module.hot) {
+    module.hot.accept('./reducer', () => store.replaceReducer(rootReducer));
+  }
+
+  return store;
+}

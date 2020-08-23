@@ -1,9 +1,10 @@
-import * as React from 'react';
-import logo from '../../images/logo.svg';
 import {Formik} from 'formik';
+import * as React from 'react';
 import {useParams} from 'react-router-dom';
-import {TextInput} from '../../components/form/TextInput';
+
 import {Button} from '../../components/Button';
+import {TextInput} from '../../components/form/TextInput';
+import logo from '../../images/logo.svg';
 
 const NAME_REGEX = /[a-zA-Z0-9_!?]{3,12}/;
 const ROOM_REGEX = /[0-9]{6}/;

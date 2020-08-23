@@ -1,4 +1,4 @@
-export const enum HostActionType {
+export enum HostActionType {
   SET_ROOM_CODE = 'HOST/SET_ROOM_CODE',
 }
 

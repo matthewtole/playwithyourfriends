@@ -1,10 +1,9 @@
 // import { VisibilityFilters } from './actions'
 
-import {combineReducers} from 'redux';
+import {combineReducers} from '@reduxjs/toolkit';
 
 import hostReducer from './host/reducer';
 import playerReducer from './player/reducer';
-import {Reducer} from 'react';
 
 const reducer = combineReducers({
   HOST: hostReducer,
