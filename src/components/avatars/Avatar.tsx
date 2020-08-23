@@ -23,7 +23,7 @@ export const Avatar: React.FC<AvatarProps> = ({variant, name}) => {
         )}
       </div>
       {name ? (
-        <p className="p-1 mt-1 font-bold text-center text-white bg-gray-600 border-4 border-black rounded">
+        <p className="p-1 mt-1 text-center text-white bg-gray-600 border-4 border-black rounded font-title">
           {name}
         </p>
       ) : null}

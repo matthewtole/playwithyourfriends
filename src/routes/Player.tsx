@@ -6,14 +6,14 @@ import {
   useRouteMatch,
   Redirect,
 } from 'react-router-dom';
-import {PlayerJoin} from './Player/Join';
+import {PlayerJoin} from './player/Join';
 
 export const Player: React.FC = () => {
   let {path} = useRouteMatch();
   const [isLoggedIn, login] = React.useState(false);
 
   return (
-    <section className="h-screen max-w-xl p-4 mx-auto bg-forward-slices font-title">
+    <main className="h-screen max-w-xl p-4 mx-auto bg-forward-slices font-title">
       <Switch>
         <Route exact path={path}>
           {!isLoggedIn ? <Redirect to={`${path}/join`} /> : <>LOBBY</>}
@@ -26,6 +26,6 @@ export const Player: React.FC = () => {
           )}
         </Route>
       </Switch>
-    </section>
+    </main>
   );
 };
