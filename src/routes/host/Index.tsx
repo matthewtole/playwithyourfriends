@@ -1,40 +1,63 @@
 import * as React from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-  useRouteMatch,
-  useHistory,
-} from 'react-router-dom';
 
-import {HostActionType} from '../../data/host/actions';
-import * as Selectors from '../../data/host/selectors';
-import {generateRoomCode} from '../../data/host/utils';
+import {Player} from '../../data/host/reducer';
+import {firestore} from '../../lib/firebase';
 import {HostLobby} from './Lobby';
-import {useParams} from 'react-router-dom';
+
+export interface Room {
+  code: string;
+  createdAt: number;
+  lastPing?: number;
+}
+
+function useRoom(roomId?: string): Room | null {
+  const [room, setRoom] = React.useState<Room | null>(null);
+  React.useEffect(() => {
+    if (!roomId) {
+      return;
+    }
+    return firestore
+      .collection('rooms')
+      .doc(roomId)
+      .onSnapshot(next => {
+        setRoom(next.data() as Room);
+      });
+  }, [roomId]);
+
+  return room;
+}
+
+function useRoomPlayers(roomId?: string): Player[] {
+  const [players, setPlayers] = React.useState<Player[]>([]);
+  React.useEffect(() => {
+    if (!roomId) {
+      return;
+    }
+    return firestore
+      .collection('rooms')
+      .doc(roomId)
+      .collection('players')
+      .onSnapshot(next => {
+        setPlayers(next.docs.map(doc => doc.data() as Player));
+      });
+  }, [roomId]);
+
+  return players;
+}
 
 export const Host: React.FC = () => {
-  const params = useParams<{roomCode?: string}>();
-  const roomCode = useSelector(Selectors.roomCode);
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const [roomId, setRoomId] = React.useState<string | undefined>();
+
+  const room = useRoom(roomId);
+  const players = useRoomPlayers(roomId);
 
   React.useEffect(() => {
-    if (!roomCode) {
-      const newRoomCode = params.roomCode || generateRoomCode();
-      dispatch({
-        type: HostActionType.SET_ROOM_CODE,
-        data: {roomCode: newRoomCode},
-      });
-      history.replace(`/host/${newRoomCode}`);
-    }
-  });
+    setRoomId('JTkWEtSL5sukS8VQgN1m');
+  }, []);
 
   return (
     <main className="flex w-screen h-screen bg-forward-slices overflow-none">
-      <HostLobby />
+      {room && <HostLobby room={room} players={players} />}
     </main>
   );
 };

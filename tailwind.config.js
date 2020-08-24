@@ -29,4 +29,8 @@ module.exports = {
     borderColor: ['responsive', 'hover', 'focus', 'disabled'],
     textColor: ['responsive', 'hover', 'focus', 'disabled'],
   },
+  purge: {
+    enabled: true,
+    content: ['./src/**/*.html', './src/**/*.tsx'],
+  },
 };

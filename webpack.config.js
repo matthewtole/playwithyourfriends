@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
+const Dotenv = require('dotenv-webpack');
 
 const config = {
   entry: ['react-hot-loader/patch', './src/index.tsx'],
@@ -53,6 +54,7 @@ const config = {
       analyzerMode: 'static',
       openAnalyzer: false,
     }),
+    new Dotenv(),
   ],
   devServer: {
     contentBase: './dist',
