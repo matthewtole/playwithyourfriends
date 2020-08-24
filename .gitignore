@@ -3,6 +3,7 @@
 coverage/
 dist/*
 !dist/index.html
+!dist/_redirects
 node_modules/
 *.log
 
