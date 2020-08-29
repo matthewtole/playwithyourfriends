@@ -35,7 +35,7 @@ describe('HostLobby', () => {
       />
     );
     players.forEach(({name}) => {
-      expect(screen.findByText(name));
+      expect(screen.getByText(name));
     });
   });
 });
