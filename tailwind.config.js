@@ -30,7 +30,7 @@ module.exports = {
     textColor: ['responsive', 'hover', 'focus', 'disabled'],
   },
   purge: {
-    enabled: true,
+    // enabled: true,
     content: ['./src/**/*.html', './src/**/*.tsx'],
   },
 };
