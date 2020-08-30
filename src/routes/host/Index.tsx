@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import {Player} from '../../data/host/reducer';
-import {firestore} from '../../lib/firebase';
-import {useLocalStorage} from '../../lib/hooks';
-import {HostLobby} from './Lobby';
 import {generateRoomCode} from '../../data/host/utils';
+import {firestore} from '../../lib/firebase';
+import {useLocalStorage, useRoom} from '../../lib/hooks';
+import {HostLobby} from './Lobby';
 
 export interface Room {
   code: string;
@@ -21,25 +21,6 @@ export async function createRoom(code?: string): Promise<string> {
     createdAt: Date.now(),
   });
   return doc.id;
-}
-
-function useRoom(roomId?: string): [Room | null, Error | undefined] {
-  const [room, setRoom] = React.useState<Room | null>(null);
-  const [error, setError] = React.useState<Error | undefined>();
-  React.useEffect(() => {
-    if (!roomId) {
-      return;
-    }
-    return firestore
-      .collection('rooms')
-      .doc(roomId)
-      .onSnapshot(next => {
-        setRoom(next.data() as Room);
-        setError(next.exists ? undefined : new Error('Room does not exist'));
-      });
-  }, [roomId]);
-
-  return [room, error];
 }
 
 function useRoomPlayers(roomId?: string): Player[] {

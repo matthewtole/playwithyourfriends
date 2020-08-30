@@ -1,4 +1,7 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+
+import {Room} from '../routes/host/Index';
+import {firestore} from './firebase';
 
 // https://usehooks.com/useLocalStorage/
 export function useLocalStorage<T>(
@@ -53,4 +56,23 @@ export function useLocalStorage<T>(
   };
 
   return [storedValue, setValue];
+}
+
+export function useRoom(roomId?: string): [Room | null, Error | undefined] {
+  const [room, setRoom] = useState<Room | null>(null);
+  const [error, setError] = useState<Error | undefined>();
+  useEffect(() => {
+    if (!roomId) {
+      return;
+    }
+    return firestore
+      .collection('rooms')
+      .doc(roomId)
+      .onSnapshot(next => {
+        setRoom(next.data() as Room);
+        setError(next.exists ? undefined : new Error('Room does not exist'));
+      });
+  }, [roomId]);
+
+  return [room, error];
 }

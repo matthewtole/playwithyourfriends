@@ -61,3 +61,12 @@ export async function addPlayerToRoom(
 
   return doc.id;
 }
+
+export async function removePlayerFromRoom(roomId: string, playerId: string) {
+  await firestore
+    .collection(COLLECTION_ROOMS)
+    .doc(roomId)
+    .collection(COLLECTION_ROOM_PLAYERS)
+    .doc(playerId)
+    .delete();
+}

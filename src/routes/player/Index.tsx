@@ -1,18 +1,11 @@
 import * as React from 'react';
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-  useRouteMatch,
-} from 'react-router-dom';
 
-import {useLocalStorage} from '../../lib/hooks';
-import {addPlayerToRoom, getRoomByCode} from '../../lib/room';
+import {useLocalStorage, useRoom} from '../../lib/hooks';
+import {addPlayerToRoom, getRoomByCode, removePlayerFromRoom} from '../../lib/room';
 import {PlayerJoin} from './Join';
+import {PlayerLobby} from './Lobby';
 
 export const Player: React.FC = () => {
-  let {path} = useRouteMatch();
   const [roomId, setRoomId] = useLocalStorage<string | undefined>(
     'pwyf-player-room',
     undefined
@@ -21,6 +14,13 @@ export const Player: React.FC = () => {
     'pwyf-player-id',
     undefined
   );
+  const [room, roomError] = useRoom(roomId);
+
+  React.useEffect(() => {
+    if (roomError && roomId) {
+      setRoomId(undefined);
+    }
+  }, [roomError]);
 
   async function joinRoom(roomCode: string, playerInfo: {name: string}) {
     const room = await getRoomByCode(roomCode);
@@ -29,25 +29,22 @@ export const Player: React.FC = () => {
     setPlayerId(id);
   }
 
-  const hasRoom = roomId && playerId;
+  async function handleLogout() {
+    await removePlayerFromRoom(roomId!, playerId!);
+    setRoomId(undefined);
+    setPlayerId(undefined);
+  }
 
   return (
     <main className="h-screen bg-forward-slices font-title">
       <section className="max-w-xl p-4 mx-auto">
-        <Switch>
-          <Route exact path={path}>
-            {!hasRoom ? <Redirect to={`${path}/join`} /> : <>LOBBY</>}
-          </Route>
-          <Route path={`${path}/join/:roomCode?`}>
-            {hasRoom ? (
-              <Redirect to={path} />
-            ) : (
-              <PlayerJoin
-                onJoin={({roomCode, name}) => joinRoom(roomCode, {name})}
-              />
-            )}
-          </Route>
-        </Switch>
+        {room ? (
+          <PlayerLobby onLogout={handleLogout} />
+        ) : (
+          <PlayerJoin
+            onJoin={({roomCode, name}) => joinRoom(roomCode, {name})}
+          />
+        )}
       </section>
     </main>
   );
