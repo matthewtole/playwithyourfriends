@@ -2,7 +2,10 @@ import * as React from 'react';
 
 import {useLocalStorage, usePlayer, useRoom} from '../../lib/hooks';
 import {
-  addPlayerToRoom, getRoomByCode, removePlayerFromRoom, updatePlayerPing
+  addPlayerToRoom,
+  getRoomByCode,
+  removePlayerFromRoom,
+  updatePlayerPing,
 } from '../../lib/room';
 import {PlayerGame} from './Game';
 import {PlayerJoin} from './Join';
