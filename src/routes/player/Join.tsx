@@ -17,7 +17,7 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
   let {roomCode} = useParams<{roomCode?: string}>();
 
   return (
-    <>
+    <section className="p-4">
       <img src={logo} className="w-full my-8" />
       <Formik
         initialValues={{name: '', roomCode: roomCode ?? ''}}
@@ -93,6 +93,6 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
           </form>
         )}
       </Formik>
-    </>
+    </section>
   );
 };

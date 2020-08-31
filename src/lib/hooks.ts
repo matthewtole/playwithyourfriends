@@ -1,7 +1,9 @@
 import {useEffect, useState} from 'react';
 
+import {Player} from '../data/host/reducer';
 import {Room} from '../routes/host/Index';
 import {firestore} from './firebase';
+import {COLLECTION_ROOM_PLAYERS, COLLECTION_ROOMS} from './room';
 
 // https://usehooks.com/useLocalStorage/
 export function useLocalStorage<T>(
@@ -75,4 +77,29 @@ export function useRoom(roomId?: string): [Room | null, Error | undefined] {
   }, [roomId]);
 
   return [room, error];
+}
+
+export function usePlayer(
+  roomId?: string,
+  playerId?: string
+): [Player | null, Error | undefined] {
+  const [player, setPlayer] = useState<Player | null>(null);
+  const [error, setError] = useState<Error | undefined>();
+
+  useEffect(() => {
+    if (!roomId || !playerId) {
+      return;
+    }
+    return firestore
+      .collection(COLLECTION_ROOMS)
+      .doc(roomId)
+      .collection(COLLECTION_ROOM_PLAYERS)
+      .doc(playerId)
+      .onSnapshot(next => {
+        setPlayer(next.data() as Player);
+        setError(next.exists ? undefined : new Error('Player does not exist'));
+      });
+  }, [roomId, playerId]);
+
+  return [player, error];
 }

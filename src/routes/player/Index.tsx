@@ -1,7 +1,9 @@
 import * as React from 'react';
 
-import {useLocalStorage, useRoom} from '../../lib/hooks';
-import {addPlayerToRoom, getRoomByCode, removePlayerFromRoom} from '../../lib/room';
+import {useLocalStorage, usePlayer, useRoom} from '../../lib/hooks';
+import {
+  addPlayerToRoom, getRoomByCode, removePlayerFromRoom, updatePlayerPing
+} from '../../lib/room';
 import {PlayerJoin} from './Join';
 import {PlayerLobby} from './Lobby';
 
@@ -15,12 +17,24 @@ export const Player: React.FC = () => {
     undefined
   );
   const [room, roomError] = useRoom(roomId);
+  const [player] = usePlayer(roomId, playerId);
 
   React.useEffect(() => {
     if (roomError && roomId) {
       setRoomId(undefined);
     }
   }, [roomError]);
+
+  React.useEffect(() => {
+    if (roomId && playerId) {
+      const interval = setInterval(() => {
+        updatePlayerPing(roomId, playerId);
+      }, 60 * 1000);
+
+      return () => clearInterval(interval);
+    }
+    return;
+  }, [roomId, playerId]);
 
   async function joinRoom(roomCode: string, playerInfo: {name: string}) {
     const room = await getRoomByCode(roomCode);
@@ -37,9 +51,9 @@ export const Player: React.FC = () => {
 
   return (
     <main className="h-screen bg-forward-slices font-title">
-      <section className="max-w-xl p-4 mx-auto">
-        {room ? (
-          <PlayerLobby onLogout={handleLogout} />
+      <section className="max-w-xl mx-auto">
+        {room && player ? (
+          <PlayerLobby onLogout={handleLogout} room={room} player={player} />
         ) : (
           <PlayerJoin
             onJoin={({roomCode, name}) => joinRoom(roomCode, {name})}

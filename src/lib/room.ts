@@ -70,3 +70,14 @@ export async function removePlayerFromRoom(roomId: string, playerId: string) {
     .doc(playerId)
     .delete();
 }
+
+export async function updatePlayerPing(roomId: string, playerId: string) {
+  await firestore
+    .collection(COLLECTION_ROOMS)
+    .doc(roomId)
+    .collection(COLLECTION_ROOM_PLAYERS)
+    .doc(playerId)
+    .update({
+      lastPing: Date.now(),
+    });
+}
