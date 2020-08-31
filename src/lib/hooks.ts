@@ -103,3 +103,30 @@ export function usePlayer(
 
   return [player, error];
 }
+
+export function useFirestoreDoc<T>(
+  collection: string,
+  id?: string
+): [T | null, boolean, Error | undefined] {
+  const [doc, setDoc] = useState<T | null>(null);
+  const [error, setError] = useState<Error | undefined>();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setLoading(false);
+    if (!id) {
+      return;
+    }
+    setLoading(true);
+    return firestore
+      .collection(collection)
+      .doc(id)
+      .onSnapshot(next => {
+        setDoc(next.data() as T);
+        setLoading(false);
+        setError(next.exists ? undefined : new Error('Could not find doc'));
+      });
+  }, [id]);
+
+  return [doc, loading, error];
+}

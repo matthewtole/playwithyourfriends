@@ -4,6 +4,7 @@ import {useLocalStorage, usePlayer, useRoom} from '../../lib/hooks';
 import {
   addPlayerToRoom, getRoomByCode, removePlayerFromRoom, updatePlayerPing
 } from '../../lib/room';
+import {PlayerGame} from './Game';
 import {PlayerJoin} from './Join';
 import {PlayerLobby} from './Lobby';
 
@@ -49,12 +50,18 @@ export const Player: React.FC = () => {
     setPlayerId(undefined);
   }
 
+  const mode = room && player ? (room.game ? 'game' : 'lobby') : 'join';
+
   return (
     <main className="h-screen bg-forward-slices font-title">
       <section className="max-w-xl mx-auto">
-        {room && player ? (
-          <PlayerLobby onLogout={handleLogout} room={room} player={player} />
-        ) : (
+        {mode === 'game' && (
+          <PlayerGame room={room!} player={player!} playerId={playerId!} />
+        )}
+        {mode === 'lobby' && (
+          <PlayerLobby onLogout={handleLogout} room={room!} player={player!} />
+        )}
+        {mode === 'join' && (
           <PlayerJoin
             onJoin={({roomCode, name}) => joinRoom(roomCode, {name})}
           />

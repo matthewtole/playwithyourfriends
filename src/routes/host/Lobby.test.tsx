@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom/extend-expect';
 
-import * as React from 'react';
 import * as faker from 'faker';
+import * as React from 'react';
 
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 
-import {HostLobby} from './Lobby';
 import {Player} from '../../data/host/reducer';
+import {HostLobby} from './Lobby';
 
 const createMockPlayer = (player: Partial<Player>): Player => {
   return {
@@ -32,6 +32,7 @@ describe('HostLobby', () => {
       <HostLobby
         players={players}
         room={{code: '12345', createdAt: Date.now()}}
+        onStartGame={jest.fn()}
       />
     );
     players.forEach(({name}) => {

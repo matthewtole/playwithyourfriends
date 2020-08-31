@@ -2,14 +2,20 @@ import * as React from 'react';
 
 import {Player} from '../../data/host/reducer';
 import {generateRoomCode} from '../../data/host/utils';
+import * as Sorted from '../../games/sorted';
 import {firestore} from '../../lib/firebase';
 import {useLocalStorage, useRoom} from '../../lib/hooks';
+import {HostGame} from './Game';
 import {HostLobby} from './Lobby';
 
 export interface Room {
   code: string;
   createdAt: number;
   lastPing?: number;
+  game?: {
+    name: string;
+    id: string;
+  };
 }
 
 export async function createRoom(code?: string): Promise<string> {
@@ -66,9 +72,25 @@ export const Host: React.FC = () => {
     }
   }, [roomError]);
 
+  async function startGame() {
+    const id = await Sorted.create(players);
+    await firestore
+      .collection('rooms')
+      .doc(roomId)
+      .update({
+        game: {
+          name: 'sorted',
+          id,
+        },
+      });
+  }
+
   return (
     <main className="flex w-screen h-screen bg-forward-slices overflow-none">
-      {room && <HostLobby room={room} players={players} />}
+      {room && !room.game && (
+        <HostLobby room={room} players={players} onStartGame={startGame} />
+      )}
+      {room && room.game && <HostGame room={room} players={players} />}
     </main>
   );
 };
