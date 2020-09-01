@@ -40,7 +40,9 @@ function useRoomPlayers(roomId?: string): Player[] {
       .doc(roomId)
       .collection('players')
       .onSnapshot(next => {
-        setPlayers(next.docs.map(doc => doc.data() as Player));
+        setPlayers(
+          next.docs.map(doc => ({...doc.data(), id: doc.id} as Player))
+        );
       });
   }, [roomId]);
 
@@ -73,7 +75,7 @@ export const Host: React.FC = () => {
   }, [roomError]);
 
   async function startGame() {
-    const id = await Sorted.create(players);
+    const id = await Sorted.create(players.map(p => p.id));
     await firestore
       .collection('rooms')
       .doc(roomId)

@@ -13,17 +13,17 @@ export interface Card {
 export interface Round {
   judge: PlayerId;
   cards: Card[];
-  orders: {player: PlayerId; order: number[]};
+  orders: {[key: string]: number[]};
   revealedCards: number;
 }
 
 export interface Game {
   cards: Card[];
   rounds: Round[];
-  players: Player[];
+  players: PlayerId[];
 }
 
-export async function create(players: Player[]): Promise<string> {
+export async function create(players: PlayerId[]): Promise<string> {
   const game: Game = {
     cards: [],
     rounds: [],
@@ -48,4 +48,37 @@ export async function addCard(
         createdBy: playerId,
       }),
     });
+}
+
+export async function startRound(game: Game, gameId: string) {
+  const round: Round = {
+    judge: game.players[0],
+    cards: game.cards.sort(() => Math.random() * 2 - 1).slice(0, 5),
+    orders: {},
+    revealedCards: 0,
+  };
+  await firestore
+    .collection('sorted')
+    .doc(gameId)
+    .update({
+      rounds: firebase.firestore.FieldValue.arrayUnion(round),
+    });
+}
+
+export async function submitOrder(
+  game: Game,
+  gameId: string,
+  playerId: PlayerId,
+  order: Card[]
+) {
+  game.rounds[0].orders[playerId] = order.map(o =>
+    game.cards.findIndex(c => c.word === o.word)
+  );
+  await firestore.collection('sorted').doc(gameId).set(game);
+  console.log(game);
+  // awaut fire
+  // .doc(`${gameId}/rounds/0/orders`)
+  // .update({
+  //   [playerId]: order,
+  // });
 }

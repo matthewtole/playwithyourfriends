@@ -23,7 +23,7 @@ export const HostLobby: React.FC<HostLobbyProps> = ({
         <ul className="flex flex-wrap m-8 space-x-4">
           {players.map((p, index) => (
             <li key={p.name}>
-              <Avatar name={p.name} variant={p.avatar} />
+              <Avatar name={p.name} variant={p.avatar || 1} />
             </li>
           ))}
         </ul>

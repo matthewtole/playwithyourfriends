@@ -56,7 +56,7 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
               <TextInput
                 id="name"
                 name="name"
-                className="text-center"
+                className="w-full text-center"
                 autoComplete="off"
                 autoCorrect="off"
                 maxLength={12}
@@ -74,7 +74,7 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
                 id="roomCode"
                 name="roomCode"
                 pattern="[0-9]*"
-                className="tracking-widest text-center"
+                className="w-full tracking-widest text-center"
                 placeholder="000000"
                 value={values.roomCode}
                 onBlur={handleBlur}
