@@ -1,12 +1,11 @@
 import * as React from 'react';
 
-import {useLocalStorage, usePlayer, useRoom} from '../../lib/hooks';
+import {Loading} from '../../components/Loading';
+import {useFirestoreDoc, useLocalStorage, usePlayer} from '../../lib/hooks';
 import {
-  addPlayerToRoom,
-  getRoomByCode,
-  removePlayerFromRoom,
-  updatePlayerPing,
+  addPlayerToRoom, getRoomByCode, removePlayerFromRoom, updatePlayerPing
 } from '../../lib/room';
+import {Room} from '../host/Index';
 import {PlayerGame} from './Game';
 import {PlayerJoin} from './Join';
 import {PlayerLobby} from './Lobby';
@@ -20,7 +19,7 @@ export const Player: React.FC = () => {
     'pwyf-player-id',
     undefined
   );
-  const [room, roomError] = useRoom(roomId);
+  const [room, roomLoading, roomError] = useFirestoreDoc<Room>('rooms', roomId);
   const [player] = usePlayer(roomId, playerId);
 
   React.useEffect(() => {
@@ -53,7 +52,18 @@ export const Player: React.FC = () => {
     setPlayerId(undefined);
   }
 
-  const mode = room && player ? (room.game ? 'game' : 'lobby') : 'join';
+  let mode = 'loading';
+  if (room && player) {
+    if (room.game) {
+      mode = 'game';
+    } else {
+      mode = 'lobby';
+    }
+  } else if (roomLoading) {
+    mode = 'loading';
+  } else {
+    mode = 'join';
+  }
 
   return (
     <main className="h-screen bg-forward-slices font-title">
@@ -69,6 +79,7 @@ export const Player: React.FC = () => {
             onJoin={({roomCode, name}) => joinRoom(roomCode, {name})}
           />
         )}
+        {mode === 'loading' && <Loading />}
       </section>
     </main>
   );

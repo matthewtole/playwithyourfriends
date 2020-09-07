@@ -5,6 +5,7 @@ import {DragDropContext, Draggable, Droppable, DropResult} from 'react-beautiful
 import {Button} from '../../components/Button';
 import {Card} from '../../components/Card';
 import {TextInput} from '../../components/form/TextInput';
+import {Loading} from '../../components/Loading';
 import {Player} from '../../data/host/reducer';
 import * as Sorted from '../../games/sorted';
 import {useFirestoreDoc} from '../../lib/hooks';
@@ -36,7 +37,7 @@ export const PlayerGame: React.FC<PlayerGameProps> = ({
   }
 
   if (loading) {
-    return <p>LOADING...</p>;
+    return <Loading />;
   }
 
   if (game?.rounds?.length) {
@@ -91,8 +92,9 @@ const CardSort: React.FC<CardSortProps> = ({game, gameId, playerId}) => {
     <div>
       <div className="p-2 text-sm text-center text-white bg-black font-body">
         <p>
-          Drag to sort these cards in order of how important <u>you</u> think
-          they are.
+          Drag to sort these cards in order of how important{' '}
+          <u>{game.rounds[0].judge === playerId ? 'you' : 'they'}</u> think they
+          are.
         </p>
       </div>
       <h3 className="p-2 text-3xl font-thin text-center text-white opacity-25 font-body">
@@ -174,9 +176,9 @@ const CardForm: React.FC<CardFormProps> = ({gameId, playerId, cards}) => (
         isValid,
       }) => (
         <form className="p-4" onSubmit={handleSubmit}>
-          <fieldset className="flex flex-row space-x-2">
+          <fieldset className="relative">
             <TextInput
-              className="flex-1"
+              className="w-full"
               id="word"
               name="word"
               autoComplete="off"
@@ -187,11 +189,11 @@ const CardForm: React.FC<CardFormProps> = ({gameId, playerId, cards}) => (
               disabled={isSubmitting}
             />
             <Button
-              className="px-4"
+              className="absolute top-0 bottom-0 right-0 px-4"
               disabled={!isValid || isSubmitting}
               type="submit"
             >
-              +
+              Add
             </Button>
           </fieldset>
         </form>

@@ -1,35 +1,29 @@
-import * as React from 'react';
-import {firestore} from '../../lib/firebase';
-import {formatRelative} from 'date-fns';
-import {useCollection} from 'react-firebase-hooks/firestore';
-import {Button} from '../../components/Button';
 import cx from 'classnames';
+import {formatRelative} from 'date-fns';
+import * as React from 'react';
+import {useCollection} from 'react-firebase-hooks/firestore';
 import {Link} from 'react-router-dom';
 
-export const Admin: React.FC = () => {
-  // const [rooms, setRooms] = React.useState<any[]>([]);
+import {Button} from '../../components/Button';
+import {firestore} from '../../lib/firebase';
 
-  // React.useEffect(() => {
-  //   return firestore.collection('rooms').onSnapshot(next => {
-  //     setRooms(next.docs.map(snapshot => snapshot.data()));
-  //   });
-  // }, [setRooms]);
+export const Admin: React.FC = () => {
   const [rooms, loading, error] = useCollection(firestore.collection('rooms'));
-  const [deleting, setDeleting] = React.useState<string | undefined>();
+  const [deleting, setDeleting] = React.useState<string[]>([]);
 
   function getRoom(id: string): firebase.firestore.DocumentReference {
     return firestore.collection('rooms').doc(id);
   }
 
   async function deleteRoom(id: string) {
-    setDeleting(id);
+    setDeleting([...deleting, id]);
     const room = getRoom(id);
     const players = await room.collection('players').get();
-    while (players.size) {
+    while (players.docs.length) {
       await players.docs.pop()?.ref.delete();
     }
     await room.delete();
-    setDeleting(undefined);
+    setDeleting(deleting.filter(d => d !== id));
   }
 
   return (
@@ -81,7 +75,7 @@ export const Admin: React.FC = () => {
               .map(({room, id}) => (
                 <tr
                   className={cx('border-b hover:bg-orange-100', {
-                    'bg-gray-200': deleting === id,
+                    'bg-gray-200': deleting.includes(id),
                   })}
                   key={id}
                 >
@@ -97,7 +91,7 @@ export const Admin: React.FC = () => {
                   <td className="p-2 border-r">{room.game?.name || '-'}</td>
                   <td className="p-2">
                     <Button
-                      disabled={!!deleting}
+                      disabled={deleting.includes(id)}
                       size="small"
                       onClick={() => deleteRoom(id)}
                     >
