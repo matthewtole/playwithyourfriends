@@ -5,26 +5,9 @@ import {useCollection} from 'react-firebase-hooks/firestore';
 import {Link} from 'react-router-dom';
 
 import {Button} from '../../components/Button';
-import {firestore} from '../../lib/firebase';
 
 export const Admin: React.FC = () => {
-  const [rooms, loading, error] = useCollection(firestore.collection('rooms'));
-  const [deleting, setDeleting] = React.useState<string[]>([]);
-
-  function getRoom(id: string): firebase.firestore.DocumentReference {
-    return firestore.collection('rooms').doc(id);
-  }
-
-  async function deleteRoom(id: string) {
-    setDeleting([...deleting, id]);
-    const room = getRoom(id);
-    const players = await room.collection('players').get();
-    while (players.docs.length) {
-      await players.docs.pop()?.ref.delete();
-    }
-    await room.delete();
-    setDeleting(deleting.filter(d => d !== id));
-  }
+  const loading = false;
 
   return (
     <main className="flex w-screen h-screen p-8 overflow-none">
@@ -49,7 +32,7 @@ export const Admin: React.FC = () => {
               </td>
             </tr>
           )}
-          {error && (
+          {/* {error && (
             <tr>
               <td
                 colSpan={5}
@@ -99,7 +82,7 @@ export const Admin: React.FC = () => {
                     </Button>
                   </td>
                 </tr>
-              ))}
+              ))} */}
         </tbody>
       </table>
     </main>
