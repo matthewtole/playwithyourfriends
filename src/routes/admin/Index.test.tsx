@@ -6,7 +6,8 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {MockedProvider} from '@apollo/react-testing';
 import {render, screen} from '@testing-library/react';
 
-import {GET_ROOMS, RoomList} from './Index';
+import {GET_ROOMS} from '../../lib/room';
+import {RoomList} from './Index';
 
 describe('Admin', () => {
   describe('RoomList', () => {

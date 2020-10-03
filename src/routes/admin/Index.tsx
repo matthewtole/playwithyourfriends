@@ -7,7 +7,7 @@ import {ApolloProvider, gql, useMutation, useQuery} from '@apollo/client';
 
 import {Button} from '../../components/Button';
 import {createApolloClient} from '../../lib/apollo';
-import {Room} from '../host/Index';
+import {DELETE_ROOM, GET_ROOMS, IGetRoomsQuery} from '../../lib/room';
 
 export const Admin: React.FC = () => {
   const client = createApolloClient();
@@ -21,39 +21,18 @@ export const Admin: React.FC = () => {
   );
 };
 
-export const GET_ROOMS = gql`
-  query getRooms {
-    rooms(order_by: {created_at: desc}) {
-      id
-      code
-      created_at
-      updated_at
-    }
-  }
-`;
-
-export const DELETE_ROOM = gql`
-  mutation deleteRoom($id: uuid!) {
-    delete_rooms_by_pk(id: $id) {
-      id
-    }
-  }
-`;
-
 export const RoomList: React.FC = () => {
-  const {loading, error, data} = useQuery<{rooms: Array<Room>}>(GET_ROOMS, {
+  const {loading, error, data} = useQuery<IGetRoomsQuery>(GET_ROOMS, {
     pollInterval: 5000,
   });
   const [deleteRoomMutation] = useMutation(DELETE_ROOM);
-
-  const deleting = null;
 
   function deleteRoom(id: string) {
     deleteRoomMutation({
       variables: {id},
       optimisticResponse: true,
       update: cache => {
-        const rooms = cache.readQuery<{rooms: Array<Room>}>({query: GET_ROOMS});
+        const rooms = cache.readQuery<IGetRoomsQuery>({query: GET_ROOMS});
         const updatedRooms = rooms!.rooms.filter(room => room.id !== id);
         cache.writeQuery({
           query: GET_ROOMS,
@@ -107,12 +86,7 @@ export const RoomList: React.FC = () => {
         )}
         {data &&
           data.rooms.map(room => (
-            <tr
-              className={cx('border-b hover:bg-orange-100', {
-                'bg-gray-200': deleting === room.id,
-              })}
-              key={room.id}
-            >
+            <tr className={cx('border-b hover:bg-orange-100')} key={room.id}>
               <td className="p-2 border-r">
                 <Link to={`/admin/room/${room.code}`}>{room.code}</Link>
               </td>
@@ -125,11 +99,7 @@ export const RoomList: React.FC = () => {
               </td>
               <td className="p-2 border-r">&mdash;</td>
               <td className="p-2">
-                <Button
-                  disabled={!!deleting}
-                  size="small"
-                  onClick={() => deleteRoom(room.id)}
-                >
+                <Button size="small" onClick={() => deleteRoom(room.id)}>
                   Delete
                 </Button>
               </td>
