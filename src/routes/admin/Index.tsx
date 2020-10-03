@@ -3,22 +3,11 @@ import {formatRelative} from 'date-fns';
 import * as React from 'react';
 import {Link} from 'react-router-dom';
 
-import {
-  ApolloClient, ApolloProvider, gql, HttpLink, InMemoryCache, useMutation, useQuery
-} from '@apollo/client';
+import {ApolloProvider, gql, useMutation, useQuery} from '@apollo/client';
 
 import {Button} from '../../components/Button';
+import {createApolloClient} from '../../lib/apollo';
 import {Room} from '../host/Index';
-
-const createApolloClient = () => {
-  return new ApolloClient({
-    link: new HttpLink({
-      uri: 'https://willing-skunk-92.hasura.app/v1/graphql',
-    }),
-
-    cache: new InMemoryCache(),
-  });
-};
 
 export const Admin: React.FC = () => {
   const client = createApolloClient();
@@ -32,27 +21,29 @@ export const Admin: React.FC = () => {
   );
 };
 
-const RoomList: React.FC = () => {
-  const GET_ROOMS = gql`
-    query getRooms {
-      rooms(order_by: {created_at: desc}) {
-        id
-        code
-        created_at
-        updated_at
-      }
+export const GET_ROOMS = gql`
+  query getRooms {
+    rooms(order_by: {created_at: desc}) {
+      id
+      code
+      created_at
+      updated_at
     }
-  `;
+  }
+`;
 
-  const DELETE_ROOM = gql`
-    mutation deleteRoom($id: uuid!) {
-      delete_rooms_by_pk(id: $id) {
-        id
-      }
+export const DELETE_ROOM = gql`
+  mutation deleteRoom($id: uuid!) {
+    delete_rooms_by_pk(id: $id) {
+      id
     }
-  `;
+  }
+`;
 
-  const {loading, error, data} = useQuery<{rooms: Array<Room>}>(GET_ROOMS, {pollInterval: 5000});
+export const RoomList: React.FC = () => {
+  const {loading, error, data} = useQuery<{rooms: Array<Room>}>(GET_ROOMS, {
+    pollInterval: 5000,
+  });
   const [deleteRoomMutation] = useMutation(DELETE_ROOM);
 
   const deleting = null;
@@ -62,11 +53,11 @@ const RoomList: React.FC = () => {
       variables: {id},
       optimisticResponse: true,
       update: cache => {
-        const rooms = cache.readQuery<{rooms: Array<Room>}>({ query: GET_ROOMS });
+        const rooms = cache.readQuery<{rooms: Array<Room>}>({query: GET_ROOMS});
         const updatedRooms = rooms!.rooms.filter(room => room.id !== id);
         cache.writeQuery({
           query: GET_ROOMS,
-          data: {rooms: updatedRooms}
+          data: {rooms: updatedRooms},
         });
       },
     });
@@ -100,7 +91,7 @@ const RoomList: React.FC = () => {
               colSpan={5}
               className="p-8 text-lg text-center text-red-500 font-body"
             >
-              {error}
+              {error.message}
             </td>
           </tr>
         )}
