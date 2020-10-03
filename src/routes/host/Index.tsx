@@ -1,13 +1,10 @@
 import * as React from 'react';
 
 export interface Room {
+  id: string;
   code: string;
-  createdAt: number;
-  lastPing?: number;
-  game?: {
-    name: string;
-    id: string;
-  };
+  created_at: string;
+  updated_at: string;
 }
 
 export const Host: React.FC = () => {
