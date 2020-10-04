@@ -75,7 +75,7 @@ const RoomPlayers: React.FC<{id?: string}> = ({id}) => {
 
   return (
     <div className="flex flex-wrap">
-      {data.room_players.map(player => (
+      {data.players.map(player => (
         <div className="w-1/6 m-2">
           <Avatar
             name={player.name}

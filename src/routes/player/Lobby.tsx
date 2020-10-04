@@ -29,7 +29,7 @@ const Lobby: React.FC<{id: string}> = ({id}) => {
     return null;
   }
 
-  const player = data?.room_players_by_pk;
+  const player = data?.players_by_pk;
 
   return (
     <main>

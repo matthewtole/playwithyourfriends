@@ -6,7 +6,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {MockedProvider, MockedResponse} from '@apollo/react-testing';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 
-import {DELETE_ROOM, GET_ROOMS, IRoom} from '../../lib/room';
+import {DELETE_ROOM, GET_ROOMS, IGetRoomsQuery, IRoom} from '../../lib/room';
 import {RoomList} from './Index';
 
 describe('Admin', () => {
@@ -75,11 +75,20 @@ describe('Admin', () => {
     });
 
     describe('list of rooms', () => {
-      const room: IRoom = {
-        id: 'abcdef',
-        created_at: new Date(2020, 1, 1).toUTCString(),
-        updated_at: new Date(2020, 2, 2).toUTCString(),
-        code: '000000',
+      const rooms: IGetRoomsQuery = {
+        rooms: [
+          {
+            id: 'abcdef',
+            created_at: new Date(2020, 1, 1).toUTCString(),
+            updated_at: new Date(2020, 2, 2).toUTCString(),
+            code: '000000',
+            players_aggregate: {
+              aggregate: {
+                count: 0,
+              },
+            },
+          },
+        ],
       };
       const mocks: Array<MockedResponse> = [
         {
@@ -87,17 +96,15 @@ describe('Admin', () => {
             query: GET_ROOMS,
           },
           result: {
-            data: {
-              rooms: [room],
-            },
+            data: rooms,
           },
         },
         {
           request: {
             query: DELETE_ROOM,
-            variables: {id: room.id},
+            variables: {id: rooms.rooms[0].id},
           },
-          result: {data: room},
+          result: {data: rooms.rooms[0]},
         },
       ];
 

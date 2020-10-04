@@ -74,7 +74,7 @@ export interface IRoomPlayer {
 
 export const GET_ROOM_PLAYERS = gql`
   query getRoomPlayers($id: uuid!) {
-    room_players(where: {room_id: {_eq: $id}}) {
+    players(where: {room_id: {_eq: $id}}) {
       id
       name
       avatar_key
@@ -82,7 +82,7 @@ export const GET_ROOM_PLAYERS = gql`
   }
 `;
 export interface IGetRoomPlayersQuery {
-  room_players: Array<IRoomPlayer>;
+  players: Array<IRoomPlayer>;
 }
 
 export function generateRoomCode(): string {
@@ -94,7 +94,7 @@ export function generateRoomCode(): string {
 
 export const JOIN_ROOM = gql`
   mutation joinRoom($name: String!, $avatarKey: Int!, $roomId: uuid!) {
-    insert_room_players_one(
+    insert_players_one(
       object: {avatar_key: $avatarKey, name: $name, room_id: $roomId}
     ) {
       id
@@ -104,12 +104,12 @@ export const JOIN_ROOM = gql`
 
 export const GET_PLAYER_BY_ID = gql`
   query getPLayer($id: uuid!) {
-    room_players_by_pk(id: $id) {
+    players_by_pk(id: $id) {
       name
       avatar_key
     }
   }
 `;
 export interface IGetPlayerByIdQuery {
-  room_players_by_pk: Pick<IRoomPlayer, 'name' | 'avatar_key'>;
+  players_by_pk: Pick<IRoomPlayer, 'name' | 'avatar_key'>;
 }

@@ -43,7 +43,7 @@ const PlayerJoin: React.FC = () => {
     const data = await joinRoom({
       variables: {roomId, name: player.name, avatarKey: player.avatarKey},
     });
-    writeStorage('pwyf::player::room', data.data?.insert_room_players_one.id);
+    writeStorage('pwyf::player::room', data.data?.insert_players_one.id);
   }
 
   return <JoinForm onJoin={handleJoin} />;
@@ -84,7 +84,7 @@ const JoinForm: React.FC<JoinFormProps> = ({onJoin}) => {
     {name, roomCode}: {name: string; roomCode: string},
     setSubmitting: (submitting: boolean) => void
   ) {
-    setPlayer({name: name.toUpperCase().trim(), avatarKey: 2});
+    setPlayer({name: name.toUpperCase().trim(), avatarKey: 1});
     getRoomsByCode({variables: {code: roomCode}});
   }
 
