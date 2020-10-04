@@ -50,6 +50,7 @@ export const RoomList: React.FC = () => {
           <th className="p-2 text-left border-r">Code</th>
           <th className="p-2 text-left border-r">Created</th>
           <th className="p-2 text-left border-r">Last Ping</th>
+          <th className="p-2 text-left border-r"># Players</th>
           <th className="p-2 text-left border-r">Current Game</th>
           <th className="p-2"></th>
         </tr>
@@ -97,6 +98,9 @@ export const RoomList: React.FC = () => {
               <td className="p-2 border-r">
                 {room.updated_at &&
                   formatRelative(Date.parse(room.updated_at), Date.now())}
+              </td>
+              <td className="p-2 border-r">
+                {room.players_aggregate.aggregate.count}
               </td>
               <td className="p-2 border-r">&mdash;</td>
               <td className="p-2">

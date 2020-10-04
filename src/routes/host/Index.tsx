@@ -90,6 +90,7 @@ const RoomPlayers: React.FC<{id?: string}> = ({id}) => {
 
 const RoomHand: React.FC<{id?: string}> = ({id}) => {
   const {data} = useQuery<IGetRoomQuery>(GET_ROOM, {variables: {id}});
+
   return data ? <Hand roomCode={data.rooms_by_pk.code} /> : null;
 };
 

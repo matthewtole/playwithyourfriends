@@ -14,12 +14,17 @@ export const GET_ROOMS = gql`
       code
       created_at
       updated_at
+      players_aggregate {
+        aggregate {
+          count
+        }
+      }
     }
   }
 `;
 
 export interface IGetRoomsQuery {
-  rooms: Array<IRoom>;
+  rooms: Array<IRoom & {players_aggregate: {aggregate: {count: number}}}>;
 }
 
 export const DELETE_ROOM = gql`
