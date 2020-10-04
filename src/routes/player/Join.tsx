@@ -2,14 +2,23 @@ import {Formik} from 'formik';
 import * as React from 'react';
 import {useParams} from 'react-router-dom';
 
-import {ApolloProvider, useLazyQuery, useMutation, useQuery} from '@apollo/client';
+import {
+  ApolloProvider,
+  useLazyQuery,
+  useMutation,
+  useQuery,
+} from '@apollo/client';
 import {useLocalStorage, writeStorage} from '@rehooks/local-storage';
 
 import {Button} from '../../components/Button';
 import {TextInput} from '../../components/form/TextInput';
 import logo from '../../images/logo.svg';
 import {createApolloClient} from '../../lib/apollo';
-import {GET_ROOMS_BY_CODE, IGetRoomsByCodeQuery, JOIN_ROOM} from '../../lib/room';
+import {
+  GET_ROOMS_BY_CODE,
+  IGetRoomsByCodeQuery,
+  JOIN_ROOM,
+} from '../../lib/room';
 
 const NAME_REGEX = /[a-zA-Z0-9_!?]{3,12}/;
 const ROOM_REGEX = /[0-9]{6}/;
@@ -34,7 +43,7 @@ const PlayerJoin: React.FC = () => {
     const data = await joinRoom({
       variables: {roomId, name: player.name, avatarKey: player.avatarKey},
     });
-    writeStorage('pwyf::player::room', data.data?.insert_room_players_one.id)
+    writeStorage('pwyf::player::room', data.data?.insert_room_players_one.id);
   }
 
   return <JoinForm onJoin={handleJoin} />;

@@ -106,6 +106,5 @@ export const GET_PLAYER_BY_ID = gql`
   }
 `;
 export interface IGetPlayerByIdQuery {
-  room_players_by_pk: Pick<IRoomPlayer, 'name' | 'avatar_key'>
+  room_players_by_pk: Pick<IRoomPlayer, 'name' | 'avatar_key'>;
 }
-

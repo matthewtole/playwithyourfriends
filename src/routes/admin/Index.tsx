@@ -9,6 +9,7 @@ import {Button} from '../../components/Button';
 import {createApolloClient} from '../../lib/apollo';
 import {DELETE_ROOM, GET_ROOMS, IGetRoomsQuery} from '../../lib/room';
 
+/* istanbul ignore next */
 export const Admin: React.FC = () => {
   const client = createApolloClient();
 

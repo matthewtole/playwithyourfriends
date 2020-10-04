@@ -3,10 +3,10 @@ import '@testing-library/jest-dom';
 import * as React from 'react';
 import {BrowserRouter as Router} from 'react-router-dom';
 
-import {MockedProvider} from '@apollo/react-testing';
-import {render, screen} from '@testing-library/react';
+import {MockedProvider, MockedResponse} from '@apollo/react-testing';
+import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 
-import {GET_ROOMS} from '../../lib/room';
+import {DELETE_ROOM, GET_ROOMS, IRoom} from '../../lib/room';
 import {RoomList} from './Index';
 
 describe('Admin', () => {
@@ -75,23 +75,29 @@ describe('Admin', () => {
     });
 
     describe('list of rooms', () => {
-      const mocks = [
+      const room: IRoom = {
+        id: 'abcdef',
+        created_at: new Date(2020, 1, 1).toUTCString(),
+        updated_at: new Date(2020, 2, 2).toUTCString(),
+        code: '000000',
+      };
+      const mocks: Array<MockedResponse> = [
         {
           request: {
             query: GET_ROOMS,
           },
           result: {
             data: {
-              rooms: [
-                {
-                  id: 'abcdef',
-                  created_at: new Date(2020, 1, 1).toUTCString(),
-                  updated_at: new Date(2020, 2, 2).toUTCString(),
-                  code: '000000',
-                },
-              ],
+              rooms: [room],
             },
           },
+        },
+        {
+          request: {
+            query: DELETE_ROOM,
+            variables: {id: room.id},
+          },
+          result: {data: room},
         },
       ];
 
@@ -107,6 +113,23 @@ describe('Admin', () => {
         expect(screen.getByText('000000')).toBeInTheDocument();
         expect(screen.getByText('02/01/2020')).toBeInTheDocument();
         expect(screen.getByText('03/02/2020')).toBeInTheDocument();
+      });
+
+      describe('deleting rooms', () => {
+        it('should remove the room from the table', async () => {
+          render(
+            <Router>
+              <MockedProvider mocks={mocks}>
+                <RoomList />
+              </MockedProvider>
+            </Router>
+          );
+          const deleteButton = await screen.findByText(/delete/i);
+          fireEvent.click(deleteButton);
+          await waitFor(() =>
+            expect(screen.queryByText('000000')).not.toBeInTheDocument()
+          );
+        });
       });
     });
   });

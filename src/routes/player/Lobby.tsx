@@ -17,14 +17,22 @@ export const LobbyWithApollo: React.FC<{id: string}> = ({id}) => {
 };
 
 const Lobby: React.FC<{id: string}> = ({id}) => {
-  const {data, loading, error} = useQuery<IGetPlayerByIdQuery>(GET_PLAYER_BY_ID, {variables: {id}});
+  const {data, loading, error} = useQuery<IGetPlayerByIdQuery>(
+    GET_PLAYER_BY_ID,
+    {variables: {id}}
+  );
 
-  if (loading) { return <Loading />; }
-  if (!data) { return null; }
-  
+  if (loading) {
+    return <Loading />;
+  }
+  if (!data) {
+    return null;
+  }
+
   const player = data?.room_players_by_pk;
 
-  return <main>
+  return (
+    <main>
       <header className="flex px-4 py-3 text-xl text-white bg-blue-700 border-b-4 border-blue-800">
         <h1 className="leading-none opacity-75">pwyf</h1>
       </header>
@@ -35,4 +43,5 @@ const Lobby: React.FC<{id: string}> = ({id}) => {
         </div>
       </section>
     </main>
-}
+  );
+};
