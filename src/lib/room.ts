@@ -5,6 +5,13 @@ export interface IRoom {
   code: string;
   created_at: string;
   updated_at: string;
+  game_id?: string;
+}
+
+export interface IPlayer {
+  id: string;
+  name: string;
+  avatar_key: number;
 }
 
 export const GET_ROOMS = gql`
@@ -48,11 +55,19 @@ export const GET_ROOM = gql`
     rooms_by_pk(id: $id) {
       id
       code
+      game_id
+      players {
+        id
+        name
+        avatar_key
+      }
     }
   }
 `;
 export interface IGetRoomQuery {
-  rooms_by_pk: Pick<IRoom, 'id' | 'code'>;
+  rooms_by_pk: Pick<IRoom, 'id' | 'code' | 'game_id'> & {
+    players: Array<IPlayer>;
+  };
 }
 
 export const GET_ROOMS_BY_CODE = gql`
@@ -64,25 +79,6 @@ export const GET_ROOMS_BY_CODE = gql`
 `;
 export interface IGetRoomsByCodeQuery {
   rooms: Array<Pick<IRoom, 'id'>>;
-}
-
-export interface IRoomPlayer {
-  id: string;
-  name: string;
-  avatar_key: number;
-}
-
-export const GET_ROOM_PLAYERS = gql`
-  query getRoomPlayers($id: uuid!) {
-    players(where: {room_id: {_eq: $id}}) {
-      id
-      name
-      avatar_key
-    }
-  }
-`;
-export interface IGetRoomPlayersQuery {
-  players: Array<IRoomPlayer>;
 }
 
 export function generateRoomCode(): string {
@@ -111,5 +107,5 @@ export const GET_PLAYER_BY_ID = gql`
   }
 `;
 export interface IGetPlayerByIdQuery {
-  players_by_pk: Pick<IRoomPlayer, 'name' | 'avatar_key'>;
+  players_by_pk: Pick<IPlayer, 'name' | 'avatar_key'>;
 }

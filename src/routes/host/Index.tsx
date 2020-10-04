@@ -1,39 +1,64 @@
 import * as React from 'react';
 
-import {ApolloProvider, useMutation, useQuery} from '@apollo/client';
+import {
+  ApolloProvider,
+  useLazyQuery,
+  useMutation,
+  useQuery,
+} from '@apollo/client';
 import {useLocalStorage, writeStorage} from '@rehooks/local-storage';
 
 import {Avatar} from '../../components/avatars/Avatar';
 import {Button} from '../../components/Button';
 import {Hand} from '../../components/host/Hand';
+import {Loading} from '../../components/Loading';
 import {HOST_ROOM_ID} from '../../config/local-storage';
+import {SortedHost} from '../../games/sorted/components/Host';
 import {createApolloClient} from '../../lib/apollo';
 import {
   CREATE_ROOM,
   generateRoomCode,
   GET_ROOM,
-  GET_ROOM_PLAYERS,
-  IGetRoomPlayersQuery,
   IGetRoomQuery,
+  IPlayer,
 } from '../../lib/room';
 
 export const Host: React.FC = () => {
   const [id] = useLocalStorage(HOST_ROOM_ID);
+  const {data, loading, error} = useQuery<IGetRoomQuery>(GET_ROOM, {
+    variables: {id},
+    skip: !id,
+  });
+
+  if (!id) {
+    return <RoomCreation />;
+  }
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return null;
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  if (data.rooms_by_pk.game_id) {
+    return <SortedHost id={data.rooms_by_pk.game_id} />;
+  }
 
   return (
-    <main className="flex w-screen h-screen bg-forward-slices overflow-none">
-      {!id && <RoomCreation />}
-      {id && (
-        <>
-          <div className="w-2/3 p-4">
-            <RoomPlayers id={id} />
-          </div>
-          <div className="w-1/3">
-            <RoomHand id={id} />
-          </div>
-        </>
-      )}
-    </main>
+    <>
+      <div className="w-2/3 p-4">
+        <RoomPlayers players={data.rooms_by_pk.players} />
+      </div>
+      <div className="w-1/3">
+        <Hand roomCode={data.rooms_by_pk.code} />
+      </div>
+    </>
   );
 };
 
@@ -62,20 +87,10 @@ const RoomCreation: React.FC = () => {
   );
 };
 
-const RoomPlayers: React.FC<{id?: string}> = ({id}) => {
-  const {error, data} = useQuery<IGetRoomPlayersQuery>(GET_ROOM_PLAYERS, {
-    variables: {id},
-  });
-  if (error) {
-    return <div>{error.message}</div>;
-  }
-  if (!data) {
-    return null;
-  }
-
+const RoomPlayers: React.FC<{players: Array<IPlayer>}> = ({players}) => {
   return (
     <div className="flex flex-wrap">
-      {data.players.map(player => (
+      {players.map(player => (
         <div className="w-1/6 m-2">
           <Avatar
             name={player.name}
@@ -88,18 +103,14 @@ const RoomPlayers: React.FC<{id?: string}> = ({id}) => {
   );
 };
 
-const RoomHand: React.FC<{id?: string}> = ({id}) => {
-  const {data} = useQuery<IGetRoomQuery>(GET_ROOM, {variables: {id}});
-
-  return data ? <Hand roomCode={data.rooms_by_pk.code} /> : null;
-};
-
 export const HostWithApollo: React.FC = () => {
   const client = createApolloClient();
 
   return (
     <ApolloProvider client={client}>
-      <Host />
+      <main className="flex w-screen h-screen bg-forward-slices overflow-none">
+        <Host />
+      </main>
     </ApolloProvider>
   );
 };
