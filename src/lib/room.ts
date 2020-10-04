@@ -31,8 +31,8 @@ export const DELETE_ROOM = gql`
 `;
 
 export const CREATE_ROOM = gql`
-  mutation createRoom($id: String!) {
-    insert_rooms_one(object: {code: "000000"}) {
+  mutation createRoom($code: String!) {
+    insert_rooms_one(object: {code: $code}) {
       id
     }
   }
@@ -48,6 +48,17 @@ export const GET_ROOM = gql`
 `;
 export interface IGetRoomQuery {
   rooms_by_pk: Pick<IRoom, 'id' | 'code'>;
+}
+
+export const GET_ROOMS_BY_CODE = gql`
+  query getRoomsByCode($code: String!) {
+    rooms(limit: 1, where: {code: {_eq: $code}}) {
+      id
+    }
+  }
+`;
+export interface IGetRoomsByCodeQuery {
+  rooms: Array<Pick<IRoom, 'id'>>;
 }
 
 export interface IRoomPlayer {
@@ -68,3 +79,33 @@ export const GET_ROOM_PLAYERS = gql`
 export interface IGetRoomPlayersQuery {
   room_players: Array<IRoomPlayer>;
 }
+
+export function generateRoomCode(): string {
+  return new Array(6)
+    .fill(0)
+    .map(() => Math.floor(10 * Math.random()).toString())
+    .join('');
+}
+
+export const JOIN_ROOM = gql`
+  mutation joinRoom($name: String!, $avatarKey: Int!, $roomId: uuid!) {
+    insert_room_players_one(
+      object: {avatar_key: $avatarKey, name: $name, room_id: $roomId}
+    ) {
+      id
+    }
+  }
+`;
+
+export const GET_PLAYER_BY_ID = gql`
+  query getPLayer($id: uuid!) {
+    room_players_by_pk(id: $id) {
+      name
+      avatar_key
+    }
+  }
+`;
+export interface IGetPlayerByIdQuery {
+  room_players_by_pk: Pick<IRoomPlayer, 'name' | 'avatar_key'>
+}
+

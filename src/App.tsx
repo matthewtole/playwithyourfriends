@@ -15,10 +15,10 @@ export class App extends React.Component {
           <Route path="/admin">
             <Admin />
           </Route>
-          <Route path="/host/:roomCode?">
+          <Route path="/host">
             <HostWithApollo />
           </Route>
-          <Route path="/player">
+          <Route path="/player/:roomCode?">
             <Player />
           </Route>
           <Route path="/">

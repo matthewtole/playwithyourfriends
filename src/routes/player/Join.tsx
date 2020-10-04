@@ -2,19 +2,82 @@ import {Formik} from 'formik';
 import * as React from 'react';
 import {useParams} from 'react-router-dom';
 
+import {ApolloProvider, useLazyQuery, useMutation, useQuery} from '@apollo/client';
+import {useLocalStorage, writeStorage} from '@rehooks/local-storage';
+
 import {Button} from '../../components/Button';
 import {TextInput} from '../../components/form/TextInput';
 import logo from '../../images/logo.svg';
+import {createApolloClient} from '../../lib/apollo';
+import {GET_ROOMS_BY_CODE, IGetRoomsByCodeQuery, JOIN_ROOM} from '../../lib/room';
 
 const NAME_REGEX = /[a-zA-Z0-9_!?]{3,12}/;
 const ROOM_REGEX = /[0-9]{6}/;
 
-export interface PlayerJoinProps {
-  onJoin: (data: {name: string; roomCode: string}) => void;
+export const JoinWithApollo: React.FC = () => {
+  const client = createApolloClient();
+
+  return (
+    <ApolloProvider client={client}>
+      <PlayerJoin />
+    </ApolloProvider>
+  );
+};
+
+const PlayerJoin: React.FC = () => {
+  const [joinRoom] = useMutation(JOIN_ROOM);
+
+  async function handleJoin(
+    roomId: string,
+    player: {name: string; avatarKey: number}
+  ) {
+    const data = await joinRoom({
+      variables: {roomId, name: player.name, avatarKey: player.avatarKey},
+    });
+    writeStorage('pwyf::player::room', data.data?.insert_room_players_one.id)
+  }
+
+  return <JoinForm onJoin={handleJoin} />;
+};
+
+interface JoinFormProps {
+  onJoin: (roomId: string, player: {name: string; avatarKey: number}) => void;
 }
 
-export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
+const JoinForm: React.FC<JoinFormProps> = ({onJoin}) => {
   let {roomCode} = useParams<{roomCode?: string}>();
+
+  const [roomId, setRoomId] = React.useState<string | undefined>();
+  const [player, setPlayer] = React.useState<
+    {name: string; avatarKey: number} | undefined
+  >();
+
+  const [getRoomsByCode, {loading, data}] = useLazyQuery<IGetRoomsByCodeQuery>(
+    GET_ROOMS_BY_CODE
+  );
+
+  if (!roomId && data && data.rooms.length) {
+    setRoomId(data.rooms[0].id);
+  }
+
+  React.useEffect(() => {
+    if (!roomId) {
+      return;
+    }
+    if (!player) {
+      return;
+    }
+
+    onJoin(roomId, player);
+  }, [roomId, player]);
+
+  async function handleJoin(
+    {name, roomCode}: {name: string; roomCode: string},
+    setSubmitting: (submitting: boolean) => void
+  ) {
+    setPlayer({name: name.toUpperCase().trim(), avatarKey: 2});
+    getRoomsByCode({variables: {code: roomCode}});
+  }
 
   return (
     <section className="p-4">
@@ -34,10 +97,7 @@ export const PlayerJoin: React.FC<PlayerJoinProps> = ({onJoin}) => {
           return errors;
         }}
         onSubmit={(values, {setSubmitting}) => {
-          setTimeout(() => {
-            setSubmitting(false);
-            onJoin(values);
-          }, 400);
+          handleJoin(values, setSubmitting);
         }}
       >
         {({

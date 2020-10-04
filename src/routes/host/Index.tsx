@@ -1,24 +1,64 @@
 import * as React from 'react';
 
-import {ApolloProvider, useQuery} from '@apollo/client';
+import {ApolloProvider, useMutation, useQuery} from '@apollo/client';
+import {useLocalStorage, writeStorage} from '@rehooks/local-storage';
 
 import {Avatar} from '../../components/avatars/Avatar';
+import {Button} from '../../components/Button';
 import {Hand} from '../../components/host/Hand';
+import {HOST_ROOM_ID} from '../../config/local-storage';
 import {createApolloClient} from '../../lib/apollo';
-import {GET_ROOM, GET_ROOM_PLAYERS, IGetRoomPlayersQuery, IGetRoomQuery} from '../../lib/room';
+import {
+  CREATE_ROOM,
+  generateRoomCode,
+  GET_ROOM,
+  GET_ROOM_PLAYERS,
+  IGetRoomPlayersQuery,
+  IGetRoomQuery,
+} from '../../lib/room';
 
 export const Host: React.FC = () => {
-  const id = 'a67aad96-38a1-4102-bb7d-aa24d6c6ebb0';
+  const [id] = useLocalStorage(HOST_ROOM_ID);
 
   return (
     <main className="flex w-screen h-screen bg-forward-slices overflow-none">
-      <div className="w-2/3 p-4">
-        <RoomPlayers id={id} />
-      </div>
-      <div className="w-1/3">
-        <RoomHand id={id} />
-      </div>
+      {!id && <RoomCreation />}
+      {id && (
+        <>
+          <div className="w-2/3 p-4">
+            <RoomPlayers id={id} />
+          </div>
+          <div className="w-1/3">
+            <RoomHand id={id} />
+          </div>
+        </>
+      )}
     </main>
+  );
+};
+
+const RoomCreation: React.FC = () => {
+  const [createRoomMutation] = useMutation(CREATE_ROOM);
+
+  async function createRoom() {
+    const {data, errors} = await createRoomMutation({
+      variables: {code: generateRoomCode()},
+      optimisticResponse: false,
+      update: cache => {
+        console.log(cache);
+      },
+    });
+    if (data) {
+      writeStorage(HOST_ROOM_ID, data.insert_rooms_one.id);
+    } else if (errors) {
+      console.error(errors);
+    }
+  }
+
+  return (
+    <div>
+      <Button onClick={createRoom}>Create Room</Button>
+    </div>
   );
 };
 
@@ -36,11 +76,12 @@ const RoomPlayers: React.FC<{id?: string}> = ({id}) => {
   return (
     <div className="flex flex-wrap">
       {data.room_players.map(player => (
-        <div className="w-1/6 m-2"><Avatar
-          name={player.name}
-          key={player.id}
-          variant={player.avatar_key}
-        />
+        <div className="w-1/6 m-2">
+          <Avatar
+            name={player.name}
+            key={player.id}
+            variant={player.avatar_key}
+          />
         </div>
       ))}
     </div>
