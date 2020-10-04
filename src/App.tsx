@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 
 import {Admin} from './routes/admin/Index';
 import {Home} from './routes/Home';
-import {Host} from './routes/host/Index';
+import {HostWithApollo} from './routes/host/Index';
 import {Player} from './routes/player/Index';
 
 export class App extends React.Component {
@@ -16,7 +16,7 @@ export class App extends React.Component {
             <Admin />
           </Route>
           <Route path="/host/:roomCode?">
-            <Host />
+            <HostWithApollo />
           </Route>
           <Route path="/player">
             <Player />

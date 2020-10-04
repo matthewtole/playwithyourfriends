@@ -1,6 +1,7 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "conventionalCommits.scopes": [
-    "admin"
+    "admin",
+    "host"
   ]
 }

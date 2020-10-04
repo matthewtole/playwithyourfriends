@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.2.2",
+    "@rehooks/local-storage": "^2.4.0",
     "classnames": "^2.2.6",
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",

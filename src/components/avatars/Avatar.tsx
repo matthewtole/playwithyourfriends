@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import transparent01 from './faces/transparent_01.png';
 import blank from './faces/blank.png';
+import transparent01 from './faces/transparent_01.png';
 
 export interface AvatarProps {
   variant?: number;
@@ -14,7 +14,7 @@ const getImageForVariant = (variant: number) => {
 
 export const Avatar: React.FC<AvatarProps> = ({variant, name}) => {
   return (
-    <div className="w-48 p-1 bg-gray-300 border-4 border-black rounded">
+    <div className="w-48 max-w-full p-1 bg-gray-300 border-4 border-black rounded">
       <div className="px-2 pt-2 bg-green-300 border-4 border-black rounded">
         {variant ? (
           <img src={getImageForVariant(variant)} className="w-full" />
