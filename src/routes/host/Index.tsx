@@ -1,11 +1,6 @@
 import * as React from 'react';
 
-import {
-  ApolloProvider,
-  useLazyQuery,
-  useMutation,
-  useQuery,
-} from '@apollo/client';
+import {ApolloProvider, useMutation, useQuery} from '@apollo/client';
 import {useLocalStorage, writeStorage} from '@rehooks/local-storage';
 
 import {Avatar} from '../../components/avatars/Avatar';
@@ -15,13 +10,7 @@ import {Loading} from '../../components/Loading';
 import {HOST_ROOM_ID} from '../../config/local-storage';
 import {SortedHost} from '../../games/sorted/components/Host';
 import {createApolloClient} from '../../lib/apollo';
-import {
-  CREATE_ROOM,
-  generateRoomCode,
-  GET_ROOM,
-  IGetRoomQuery,
-  IPlayer,
-} from '../../lib/room';
+import {CREATE_ROOM, generateRoomCode, GET_ROOM, IGetRoomQuery, IPlayer} from '../../lib/room';
 
 export const Host: React.FC = () => {
   const [id] = useLocalStorage(HOST_ROOM_ID);

@@ -31,3 +31,23 @@ export const CREATE_ROUND = gql`
     }
   }
 `;
+
+export const SUBMIT_VOTE = gql`
+  mutation submitVote(
+    $round: uuid!
+    $player: uuid!
+    $word: uuid!
+    $position: Int!
+  ) {
+    insert_sorted_votes_one(
+      object: {
+        round_id: $round
+        player_id: $player
+        word_id: $word
+        position: $position
+      }
+    ) {
+      position
+    }
+  }
+`;

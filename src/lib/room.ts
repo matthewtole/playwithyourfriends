@@ -103,9 +103,15 @@ export const GET_PLAYER_BY_ID = gql`
     players_by_pk(id: $id) {
       name
       avatar_key
+      room {
+        game_id
+        game_key
+      }
     }
   }
 `;
 export interface IGetPlayerByIdQuery {
-  players_by_pk: Pick<IPlayer, 'name' | 'avatar_key'>;
+  players_by_pk: Pick<IPlayer, 'name' | 'avatar_key'> & {
+    room: Pick<IRoom, 'game_id'>;
+  };
 }

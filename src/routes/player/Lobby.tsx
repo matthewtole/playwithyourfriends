@@ -2,7 +2,9 @@ import * as React from 'react';
 
 import {ApolloProvider, useQuery} from '@apollo/client';
 
+import {Header} from '../../components/Header';
 import {Loading} from '../../components/Loading';
+import {SortedPlayer} from '../../games/sorted/components/Player';
 import {createApolloClient} from '../../lib/apollo';
 import {GET_PLAYER_BY_ID, IGetPlayerByIdQuery} from '../../lib/room';
 
@@ -25,17 +27,19 @@ const Lobby: React.FC<{id: string}> = ({id}) => {
   if (loading) {
     return <Loading />;
   }
+
   if (!data) {
     return null;
   }
 
   const player = data?.players_by_pk;
+  if (player.room.game_id) {
+    return <SortedPlayer id={player.room.game_id} playerId={id} />;
+  }
 
   return (
     <main>
-      <header className="flex px-4 py-3 text-xl text-white bg-blue-700 border-b-4 border-blue-800">
-        <h1 className="leading-none opacity-75">pwyf</h1>
-      </header>
+      <Header />
       <section className="p-4">
         <div className="p-4 bg-yellow-400">
           <p className="mb-2">Hello, {player.name}!</p>
