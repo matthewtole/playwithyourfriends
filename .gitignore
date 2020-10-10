@@ -6,6 +6,7 @@ dist/*
 !dist/_redirects
 node_modules/
 *.log
+.env
 
 # OS generated files
 .DS_Store
