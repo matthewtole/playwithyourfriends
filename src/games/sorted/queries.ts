@@ -1,7 +1,7 @@
 import {gql} from '@apollo/client';
 
 import {IPlayer} from '../../lib/room';
-import {IRound} from './types';
+import {IGame, IRound} from './types';
 
 export const GET_GAME = gql`
   query getGame($id: uuid!) {
@@ -12,6 +12,7 @@ export const GET_GAME = gql`
         player_id
       }
       room {
+        code
         players {
           name
           avatar_key
@@ -19,6 +20,14 @@ export const GET_GAME = gql`
         }
       }
       rounds(order_by: {number: desc}) {
+        votes {
+          player_id
+          word_id
+          position
+        }
+        judge {
+          id
+        }
         words {
           word {
             id
@@ -32,7 +41,7 @@ export const GET_GAME = gql`
 export interface IGetGameQuery {
   sorted_games_by_pk: {
     words: Array<{id: string; word: string; player_id: string}>;
-    room: {players: Array<IPlayer>};
+    room: {players: Array<IPlayer>; code: string};
     rounds: Array<IRound>;
   };
 }
@@ -40,6 +49,12 @@ export interface IGetGameQuery {
 export const GET_GAME_FOR_PLAYER = gql`
   query getGameForPlayer($id: uuid!, $player: uuid!) {
     sorted_games_by_pk(id: $id) {
+      id
+      words {
+        id
+        player_id
+        word
+      }
       rounds(order_by: {number: desc}, limit: 1) {
         id
         words {
@@ -62,7 +77,5 @@ export const GET_GAME_FOR_PLAYER = gql`
   }
 `;
 export interface IGetGameForPlayerQuery {
-  sorted_games_by_pk: {
-    rounds: Array<IRound>;
-  };
+  sorted_games_by_pk: Pick<IGame, 'rounds' | 'words' | 'id'>;
 }

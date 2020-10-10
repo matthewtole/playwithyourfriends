@@ -101,6 +101,7 @@ export const JOIN_ROOM = gql`
 export const GET_PLAYER_BY_ID = gql`
   query getPLayer($id: uuid!) {
     players_by_pk(id: $id) {
+      id
       name
       avatar_key
       room {
@@ -111,7 +112,7 @@ export const GET_PLAYER_BY_ID = gql`
   }
 `;
 export interface IGetPlayerByIdQuery {
-  players_by_pk: Pick<IPlayer, 'name' | 'avatar_key'> & {
+  players_by_pk: Pick<IPlayer, 'name' | 'avatar_key' | 'id'> & {
     room: Pick<IRoom, 'game_id'>;
   };
 }

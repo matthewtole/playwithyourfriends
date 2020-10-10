@@ -8,9 +8,15 @@ import {Button} from '../../components/Button';
 import {Hand} from '../../components/host/Hand';
 import {Loading} from '../../components/Loading';
 import {HOST_ROOM_ID} from '../../config/local-storage';
-import {SortedHost} from '../../games/sorted/components/Host';
+import {SortedHost} from '../../games/sorted/components/host/SortedHost';
 import {createApolloClient} from '../../lib/apollo';
-import {CREATE_ROOM, generateRoomCode, GET_ROOM, IGetRoomQuery, IPlayer} from '../../lib/room';
+import {
+  CREATE_ROOM,
+  generateRoomCode,
+  GET_ROOM,
+  IGetRoomQuery,
+  IPlayer,
+} from '../../lib/room';
 
 export const Host: React.FC = () => {
   const [id] = useLocalStorage(HOST_ROOM_ID);

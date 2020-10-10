@@ -4,7 +4,7 @@ import {ApolloProvider, useQuery} from '@apollo/client';
 
 import {Header} from '../../components/Header';
 import {Loading} from '../../components/Loading';
-import {SortedPlayer} from '../../games/sorted/components/Player';
+import {SortedPlayer} from '../../games/sorted/components/player/SortedPlayer';
 import {createApolloClient} from '../../lib/apollo';
 import {GET_PLAYER_BY_ID, IGetPlayerByIdQuery} from '../../lib/room';
 
@@ -34,7 +34,7 @@ const Lobby: React.FC<{id: string}> = ({id}) => {
 
   const player = data?.players_by_pk;
   if (player.room.game_id) {
-    return <SortedPlayer id={player.room.game_id} playerId={id} />;
+    return <SortedPlayer id={player.room.game_id} player={player} />;
   }
 
   return (
