@@ -1,15 +1,11 @@
 import {IPlayer} from '../../lib/room';
 import {IGame, IRound} from './types';
-import {
-  hasPlayerSubmittedVotes,
-  numWordsForPlayer,
-  wordPositionForPlayer,
-} from './utils';
+import {hasPlayerSubmittedVotes, numWordsForPlayer, wordPositionForPlayer} from './utils';
 
 describe('Sorted // Utility functions', () => {
-  const p1: IPlayer = {id: 'player-1', name: 'Player 1', avatar_key: 1};
-  const p2: IPlayer = {id: 'player-2', name: 'Player 2', avatar_key: 2};
-  const p3: IPlayer = {id: 'player-3', name: 'Player 3', avatar_key: 3};
+  const p1: IPlayer = {id: 'player-1', name: 'Player 1', emoji: '😈'};
+  const p2: IPlayer = {id: 'player-2', name: 'Player 2', emoji: '👹'};
+  const p3: IPlayer = {id: 'player-3', name: 'Player 3', emoji: '🧠'};
 
   const round: IRound = {
     id: 'round1',

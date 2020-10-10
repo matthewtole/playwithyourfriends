@@ -10,13 +10,7 @@ import {Loading} from '../../components/Loading';
 import {HOST_ROOM_ID} from '../../config/local-storage';
 import {SortedHost} from '../../games/sorted/components/host/SortedHost';
 import {createApolloClient} from '../../lib/apollo';
-import {
-  CREATE_ROOM,
-  generateRoomCode,
-  GET_ROOM,
-  IGetRoomQuery,
-  IPlayer,
-} from '../../lib/room';
+import {CREATE_ROOM, generateRoomCode, GET_ROOM, IGetRoomQuery, IPlayer} from '../../lib/room';
 
 export const Host: React.FC = () => {
   const [id] = useLocalStorage(HOST_ROOM_ID);
@@ -87,11 +81,7 @@ const RoomPlayers: React.FC<{players: Array<IPlayer>}> = ({players}) => {
     <div className="flex flex-wrap">
       {players.map(player => (
         <div className="w-1/6 m-2">
-          <Avatar
-            name={player.name}
-            key={player.id}
-            variant={player.avatar_key}
-          />
+          <Avatar name={player.name} key={player.id} emoji={player.emoji} />
         </div>
       ))}
     </div>

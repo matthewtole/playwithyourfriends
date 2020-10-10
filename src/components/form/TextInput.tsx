@@ -5,6 +5,6 @@ export const TextInput: React.FC<React.HTMLProps<HTMLInputElement>> = props => (
   <input
     type="text"
     {...props}
-    className={classnames('rounded p-2', props.className)}
+    className={classnames('rounded leading-none', props.className)}
   />
 );

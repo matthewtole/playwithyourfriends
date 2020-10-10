@@ -11,7 +11,7 @@ export interface IRoom {
 export interface IPlayer {
   id: string;
   name: string;
-  avatar_key: number;
+  emoji: string;
 }
 
 export const GET_ROOMS = gql`
@@ -59,7 +59,7 @@ export const GET_ROOM = gql`
       players {
         id
         name
-        avatar_key
+        emoji
       }
     }
   }
@@ -89,10 +89,8 @@ export function generateRoomCode(): string {
 }
 
 export const JOIN_ROOM = gql`
-  mutation joinRoom($name: String!, $avatarKey: Int!, $roomId: uuid!) {
-    insert_players_one(
-      object: {avatar_key: $avatarKey, name: $name, room_id: $roomId}
-    ) {
+  mutation joinRoom($name: String!, $emoji: String!, $roomId: uuid!) {
+    insert_players_one(object: {emoji: $emoji, name: $name, room_id: $roomId}) {
       id
     }
   }
@@ -103,7 +101,7 @@ export const GET_PLAYER_BY_ID = gql`
     players_by_pk(id: $id) {
       id
       name
-      avatar_key
+      emoji
       room {
         game_id
         game_key
@@ -112,7 +110,7 @@ export const GET_PLAYER_BY_ID = gql`
   }
 `;
 export interface IGetPlayerByIdQuery {
-  players_by_pk: Pick<IPlayer, 'name' | 'avatar_key' | 'id'> & {
+  players_by_pk: Pick<IPlayer, 'name' | 'emoji' | 'id'> & {
     room: Pick<IRoom, 'game_id'>;
   };
 }

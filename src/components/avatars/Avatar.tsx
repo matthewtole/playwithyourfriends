@@ -1,32 +1,19 @@
 import * as React from 'react';
 
-import blank from './faces/blank.png';
-import transparent01 from './faces/transparent_01.png';
-
 export interface AvatarProps {
-  variant?: number;
-  name?: string;
+  emoji: string;
+  name: string;
 }
 
-const getImageForVariant = (variant: number) => {
-  return transparent01;
-};
-
-export const Avatar: React.FC<AvatarProps> = ({variant, name}) => {
+export const Avatar: React.FC<AvatarProps> = ({emoji, name}) => {
   return (
     <div className="w-48 max-w-full p-1 bg-gray-300 border-4 border-black rounded">
-      <div className="px-2 pt-2 bg-green-300 border-4 border-black rounded">
-        {variant ? (
-          <img src={getImageForVariant(variant)} className="w-full" />
-        ) : (
-          <img src={blank} className="w-full" />
-        )}
+      <div className="flex items-center justify-center p-8 bg-green-300 border-4 border-black rounded">
+        <span className="text-6xl leading-none">{emoji}</span>
       </div>
-      {name ? (
-        <p className="p-1 mt-1 text-center text-white bg-gray-600 border-4 border-black rounded font-title">
-          {name}
-        </p>
-      ) : null}
+      <p className="p-1 mt-1 text-center text-white bg-gray-600 border-4 border-black rounded font-title">
+        {name}
+      </p>
     </div>
   );
 };
