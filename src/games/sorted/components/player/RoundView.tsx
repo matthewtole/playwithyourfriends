@@ -33,21 +33,24 @@ export const RoundView: React.FC<{round: IRound; playerId: string}> = ({
 
   return (
     <div>
-      {round.judge.id === playerId ? (
-        <p className="p-2 m-2 text-sm text-center bg-white">
-          Sort these items in order of how important YOU think they are.
-        </p>
-      ) : (
-        <p className="p-2 m-2 text-sm text-center bg-white">
-          Sort these items in order of how important {round.judge.name} thinks
-          they are.
-        </p>
-      )}
-      <p className="p-2 text-xl text-center text-white opacity-50 font-body">
+      <div className="px-8 py-4 text-lg leading-tight text-center text-white bg-black">
+        {round.judge.id === playerId ? (
+          <p>
+            Sort these items in order of how important <em>YOU</em> think they
+            are.
+          </p>
+        ) : (
+          <p>
+            Sort these items in order of how important {round.judge.name} thinks
+            they are.
+          </p>
+        )}
+      </div>
+      <p className="p-2 text-2xl text-center text-white opacity-25 font-body">
         MOST IMPORTANT
       </p>
       <SortedCards words={sortedWords} onUpdateOrder={setSortedWords} />
-      <p className="p-2 text-xl text-center text-white opacity-50 font-body">
+      <p className="p-2 text-2xl text-center text-white opacity-25 font-body">
         LEAST IMPORTANT
       </p>
       <Button onClick={submitOrder}>DONE</Button>

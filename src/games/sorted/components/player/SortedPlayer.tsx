@@ -5,14 +5,24 @@ import {useQuery} from '@apollo/client';
 import {Header} from '../../../../components/Header';
 import {Loading} from '../../../../components/Loading';
 import {IPlayer} from '../../../../lib/room';
-import {
-  GET_GAME_FOR_PLAYER,
-  IGetGameForPlayerQuery,
-  IGetGameQuery,
-} from '../../queries';
+import {GET_GAME_FOR_PLAYER, IGetGameForPlayerQuery, IGetGameQuery} from '../../queries';
 import {hasPlayerSubmittedVotes, numWordsForPlayer} from '../../utils';
 import {RoundView} from './RoundView';
 import {WordForm} from './WordForm';
+
+const WaitingForOtherPlayers: React.FC = ({children}) => (
+  <>
+    <div className="px-8 py-4 text-lg leading-tight text-center text-white bg-black">
+      {children}
+    </div>
+    <div className="p-4">
+      <img
+        src="https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif"
+        className="w-full"
+      />
+    </div>
+  </>
+);
 
 export const SortedPlayer: React.FC<{
   id: string;
@@ -41,17 +51,27 @@ export const SortedPlayer: React.FC<{
   const currentRound = game.rounds[0];
 
   return (
-    <main>
+    <main className="flex flex-col h-screen">
       <Header game="SORTED" name={player.name} />
       {currentRound &&
         (hasPlayerSubmittedVotes(currentRound, player.id) ? (
-          <></>
+          <WaitingForOtherPlayers>
+            <p>Waiting for everyone else to submit their votes...</p>
+          </WaitingForOtherPlayers>
         ) : (
           <RoundView round={currentRound} playerId={player.id} />
         ))}
-      {!currentRound && numWordsForPlayer(game, player.id) < 5 ? (
-        <WordForm game={game} playerId={player.id} />
-      ) : null}
+      {!currentRound &&
+        (numWordsForPlayer(game, player.id) < 5 ? (
+          <WordForm game={game} playerId={player.id} />
+        ) : (
+          <WaitingForOtherPlayers>
+            <p>
+              Waiting for everyone else to submit their words before we can
+              start the game...
+            </p>
+          </WaitingForOtherPlayers>
+        ))}
     </main>
   );
 };

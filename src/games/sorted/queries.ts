@@ -15,7 +15,7 @@ export const GET_GAME = gql`
         code
         players {
           name
-          avatar_key
+          emoji
           id
         }
       }

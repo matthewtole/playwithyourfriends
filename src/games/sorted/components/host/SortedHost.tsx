@@ -51,13 +51,12 @@ export const SortedHost: React.FC<{id: string}> = ({id}) => {
   return (
     <div className="flex flex-col w-screen h-screen">
       <Header game="SORTED" code={game.room.code} />
-      <section className="grid flex-1">
-        {game.rounds.length ? (
-          <RoundView round={game.rounds[0]} players={game.room.players} />
-        ) : (
-          <IntroView startRound={startRound} />
-        )}
-      </section>
+
+      {game.rounds.length ? (
+        <RoundView round={game.rounds[0]} players={game.room.players} />
+      ) : (
+        <IntroView startRound={startRound} />
+      )}
       <FooterView round={game.rounds[0]} players={game.room.players} />
     </div>
   );

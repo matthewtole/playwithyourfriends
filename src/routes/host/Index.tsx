@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {ApolloProvider, useMutation, useQuery} from '@apollo/client';
-import {useLocalStorage, writeStorage} from '@rehooks/local-storage';
+import {deleteFromStorage, useLocalStorage, writeStorage} from '@rehooks/local-storage';
 
 import {Avatar} from '../../components/avatars/Avatar';
 import {Button} from '../../components/Button';
@@ -13,7 +13,7 @@ import {createApolloClient} from '../../lib/apollo';
 import {CREATE_ROOM, generateRoomCode, GET_ROOM, IGetRoomQuery, IPlayer} from '../../lib/room';
 
 export const Host: React.FC = () => {
-  const [id] = useLocalStorage(HOST_ROOM_ID);
+  const [id, setId] = useLocalStorage<string>(HOST_ROOM_ID);
   const {data, loading, error} = useQuery<IGetRoomQuery>(GET_ROOM, {
     variables: {id},
     skip: !id,
@@ -28,10 +28,17 @@ export const Host: React.FC = () => {
   }
 
   if (error) {
+    console.error(error);
     return null;
   }
 
   if (!data) {
+    console.error(new Error('No data...'));
+    return null;
+  }
+
+  if (!data.rooms_by_pk) {
+    deleteFromStorage(HOST_ROOM_ID);
     return null;
   }
 

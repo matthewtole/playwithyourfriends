@@ -10,7 +10,7 @@ export const Player: React.FC = () => {
   const [id] = useLocalStorage(PLAYER_ROOM_ID);
 
   return (
-    <main className="h-screen bg-forward-slices font-title">
+    <main className="h-screen bg-forward-slices">
       <section className="max-w-xl mx-auto">
         {!id && <JoinWithApollo />}
         {id && <LobbyWithApollo id={id} />}

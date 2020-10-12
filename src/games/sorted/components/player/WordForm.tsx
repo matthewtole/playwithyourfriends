@@ -38,8 +38,8 @@ export const WordForm: React.FC<{
   }
 
   return (
-    <div className="p-4">
-      <div>
+    <div className="flex flex-col h-full space-y-4">
+      <div className="px-8 py-4 text-lg leading-tight text-center text-white bg-black">
         <p>
           Please come up with at least five words to build out the deck of
           cards.
@@ -60,17 +60,20 @@ export const WordForm: React.FC<{
           return errors;
         }}
         onSubmit={(values, {resetForm}) => {
-          setWords([...words, values.word.toUpperCase().trim()]);
+          setWords([values.word.toUpperCase().trim(), ...words]);
           resetForm();
         }}
       >
         {({values, handleChange, handleBlur, handleSubmit, isValid}) => (
-          <form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
-            <fieldset className="flex flex-col space-y-1">
+          <form
+            className="flex flex-row px-4 space-x-2"
+            onSubmit={handleSubmit}
+          >
+            <fieldset className="flex-1">
               <TextInput
                 id="word"
                 name="word"
-                className="w-full text-center"
+                className="w-full text-center font-title"
                 autoComplete="off"
                 autoCorrect="off"
                 maxLength={20}
@@ -87,26 +90,31 @@ export const WordForm: React.FC<{
                 disabled={isSubmitting || !isValid}
                 fullWidth
               >
-                Add Word
+                Add
               </Button>
             </fieldset>
           </form>
         )}
       </Formik>
-      <ul>
-        {words.map(w => (
-          <li>
-            <Card key={w}>{w}</Card>
+      <ul className="flex flex-col flex-1 px-4 space-y-2">
+        {words.map(word => (
+          <li
+            key={word}
+            className="flex items-center justify-center max-w-lg p-2 text-lg bg-gray-200 border-2 border-black rounded font-title"
+          >
+            {word}
           </li>
         ))}
       </ul>
-      <Button
-        className="w-full my-4"
-        onClick={submitWords}
-        disabled={words.length < 5}
-      >
-        Done!
-      </Button>
+      <div className="p-4">
+        <Button
+          className="w-full"
+          onClick={submitWords}
+          disabled={words.length < 5}
+        >
+          Done
+        </Button>
+      </div>
     </div>
   );
 };

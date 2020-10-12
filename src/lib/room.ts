@@ -103,6 +103,7 @@ export const GET_PLAYER_BY_ID = gql`
       name
       emoji
       room {
+        id
         game_id
         game_key
       }
@@ -111,6 +112,18 @@ export const GET_PLAYER_BY_ID = gql`
 `;
 export interface IGetPlayerByIdQuery {
   players_by_pk: Pick<IPlayer, 'name' | 'emoji' | 'id'> & {
-    room: Pick<IRoom, 'game_id'>;
+    room: Pick<IRoom, 'game_id' | 'id'>;
   };
 }
+
+export const SET_ROOM_GAME = gql`
+  mutation setRoomGame($room: uuid!, $game: uuid!) {
+    update_rooms_by_pk(
+      pk_columns: {id: $room}
+      _set: {game_id: $game, game_key: "sorted"}
+    ) {
+      game_id
+      game_key
+    }
+  }
+`;

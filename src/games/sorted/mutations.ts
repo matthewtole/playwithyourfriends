@@ -1,5 +1,13 @@
 import {gql} from '@apollo/client';
 
+export const CREATE_GAME = gql`
+  mutation createGame($room: uuid!) {
+    insert_sorted_games_one(object: {room_id: $room}) {
+      id
+    }
+  }
+`;
+
 // TODO: Find a better way to do the createRound mutation #2
 export const CREATE_ROUND = gql`
   mutation createRound(
@@ -34,7 +42,7 @@ export const CREATE_ROUND = gql`
 `;
 
 export const SUBMIT_WORDS = gql`
-  mutation submitWords($game: uuid!, $player: uuid!, $word: string) {
+  mutation submitWords($game: uuid!, $player: uuid!, $word: String!) {
     insert_sorted_words_one(
       object: {game_id: $game, player_id: $player, word: $word}
     ) {
