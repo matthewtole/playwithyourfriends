@@ -1,7 +1,11 @@
 import * as React from 'react';
 
 import {ApolloProvider, useMutation, useQuery} from '@apollo/client';
-import {deleteFromStorage, useLocalStorage, writeStorage} from '@rehooks/local-storage';
+import {
+  deleteFromStorage,
+  useLocalStorage,
+  writeStorage,
+} from '@rehooks/local-storage';
 
 import {Avatar} from '../../components/avatars/Avatar';
 import {Button} from '../../components/Button';
@@ -10,10 +14,16 @@ import {Loading} from '../../components/Loading';
 import {HOST_ROOM_ID} from '../../config/local-storage';
 import {SortedHost} from '../../games/sorted/components/host/SortedHost';
 import {createApolloClient} from '../../lib/apollo';
-import {CREATE_ROOM, generateRoomCode, GET_ROOM, IGetRoomQuery, IPlayer} from '../../lib/room';
+import {
+  CREATE_ROOM,
+  generateRoomCode,
+  GET_ROOM,
+  IGetRoomQuery,
+  IPlayer,
+} from '../../lib/room';
 
 export const Host: React.FC = () => {
-  const [id, setId] = useLocalStorage<string>(HOST_ROOM_ID);
+  const [id] = useLocalStorage<string>(HOST_ROOM_ID);
   const {data, loading, error} = useQuery<IGetRoomQuery>(GET_ROOM, {
     variables: {id},
     skip: !id,
@@ -87,8 +97,8 @@ const RoomPlayers: React.FC<{players: Array<IPlayer>}> = ({players}) => {
   return (
     <div className="flex flex-wrap">
       {players.map(player => (
-        <div className="w-1/6 m-2">
-          <Avatar name={player.name} key={player.id} emoji={player.emoji} />
+        <div className="w-1/6 m-2" key={player.id}>
+          <Avatar name={player.name} emoji={player.emoji} />
         </div>
       ))}
     </div>

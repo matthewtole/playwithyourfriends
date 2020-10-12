@@ -5,7 +5,7 @@ import {useQuery} from '@apollo/client';
 import {Header} from '../../../../components/Header';
 import {Loading} from '../../../../components/Loading';
 import {IPlayer} from '../../../../lib/room';
-import {GET_GAME_FOR_PLAYER, IGetGameForPlayerQuery, IGetGameQuery} from '../../queries';
+import {GET_GAME_FOR_PLAYER, IGetGameForPlayerQuery} from '../../queries';
 import {hasPlayerSubmittedVotes, numWordsForPlayer} from '../../utils';
 import {RoundView} from './RoundView';
 import {WordForm} from './WordForm';

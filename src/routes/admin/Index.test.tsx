@@ -6,7 +6,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {MockedProvider, MockedResponse} from '@apollo/react-testing';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 
-import {DELETE_ROOM, GET_ROOMS, IGetRoomsQuery, IRoom} from '../../lib/room';
+import {DELETE_ROOM, GET_ROOMS, IGetRoomsQuery} from '../../lib/room';
 import {RoomList} from './Index';
 
 describe('Admin', () => {

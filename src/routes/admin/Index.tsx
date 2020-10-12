@@ -3,7 +3,7 @@ import {formatRelative} from 'date-fns';
 import * as React from 'react';
 import {Link} from 'react-router-dom';
 
-import {ApolloProvider, gql, useMutation, useQuery} from '@apollo/client';
+import {ApolloProvider, useMutation, useQuery} from '@apollo/client';
 
 import {Button} from '../../components/Button';
 import {createApolloClient} from '../../lib/apollo';
@@ -34,7 +34,10 @@ export const RoomList: React.FC = () => {
       optimisticResponse: true,
       update: cache => {
         const rooms = cache.readQuery<IGetRoomsQuery>({query: GET_ROOMS});
-        const updatedRooms = rooms!.rooms.filter(room => room.id !== id);
+        if (!rooms) {
+          return;
+        }
+        const updatedRooms = rooms.rooms.filter(room => room.id !== id);
         cache.writeQuery({
           query: GET_ROOMS,
           data: {rooms: updatedRooms},
@@ -82,7 +85,7 @@ export const RoomList: React.FC = () => {
               colSpan={5}
               className="p-8 text-lg text-center text-gray-500 font-body"
             >
-              It's quiet, too quiet...
+              It&#39;s quiet, too quiet...
             </td>
           </tr>
         )}

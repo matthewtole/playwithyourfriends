@@ -5,16 +5,15 @@ import {
   Draggable,
   Droppable,
   DropResult,
-  ResponderProvided,
 } from 'react-beautiful-dnd';
 
 import {Card} from '../../../../components/Card';
 
 export const reorder = (
-  list: Array<any>,
+  list: Array<{word: string; id: string}>,
   startIndex: number,
   endIndex: number
-) => {
+): Array<{word: string; id: string}> => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -34,7 +33,7 @@ export const SortedCards: React.FC<{
     ...draggableStyle,
   });
 
-  const onDragEnd = (result: DropResult, provider: ResponderProvided) => {
+  const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
     }

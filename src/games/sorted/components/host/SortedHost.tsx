@@ -57,7 +57,7 @@ export const SortedHost: React.FC<{id: string}> = ({id}) => {
       ) : (
         <IntroView startRound={startRound} />
       )}
-      <FooterView round={game.rounds[0]} players={game.room.players} />
+      <FooterView players={game.room.players} />
     </div>
   );
 };

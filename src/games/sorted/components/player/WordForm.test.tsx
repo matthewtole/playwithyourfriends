@@ -3,16 +3,16 @@ import '@testing-library/jest-dom';
 import * as React from 'react';
 
 import randomEmoji from '@0xadada/random-emoji';
-import {MockedProvider, MockedResponse} from '@apollo/react-testing';
+import {MockedProvider} from '@apollo/react-testing';
 import {cleanup, render, screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {IPlayer} from '../../../../lib/room';
-import {SUBMIT_VOTE, SUBMIT_WORDS} from '../../mutations';
+import {SUBMIT_WORDS} from '../../mutations';
 import {IGame, IWord} from '../../types';
 import {WordForm} from './WordForm';
 
-function createPlayers(count: number = 5): Array<IPlayer> {
+function createPlayers(count = 5): Array<IPlayer> {
   return new Array(count).fill(null).map((_, index) => ({
     emoji: randomEmoji(),
     name: `Player ${index}`,
@@ -35,7 +35,7 @@ function createWords(playerCounts: Array<[IPlayer, number]>): Array<IWord> {
 }
 
 describe('WordForm', () => {
-  const [p1, p2, p3] = createPlayers(3);
+  const [p1, p2] = createPlayers(3);
   const game: Pick<IGame, 'id' | 'words'> = {
     id: 'game1',
     words: createWords([[p2, 5]]),

@@ -1,6 +1,10 @@
 import {IPlayer} from '../../lib/room';
 import {IGame, IRound} from './types';
-import {hasPlayerSubmittedVotes, numWordsForPlayer, wordPositionForPlayer} from './utils';
+import {
+  hasPlayerSubmittedVotes,
+  numWordsForPlayer,
+  wordPositionForPlayer,
+} from './utils';
 
 describe('Sorted // Utility functions', () => {
   const p1: IPlayer = {id: 'player-1', name: 'Player 1', emoji: '😈'};
@@ -67,16 +71,16 @@ describe('Sorted // Utility functions', () => {
       expect(wordPositionForPlayer(round, 'word1', p1.id)).toBe(1);
     });
 
-    it('returns undefined if the player does not have any votes', () => {
-      expect(wordPositionForPlayer(round, 'word1', p3.id)).toBeUndefined();
+    it('returns -1 if the player does not have any votes', () => {
+      expect(wordPositionForPlayer(round, 'word1', p3.id)).toBe(-1);
     });
 
-    it('returns undefined the player has not voted for that word', () => {
-      expect(wordPositionForPlayer(round, 'word2', p2.id)).toBeUndefined();
+    it('returns -1 the player has not voted for that word', () => {
+      expect(wordPositionForPlayer(round, 'word2', p2.id)).toBe(-1);
     });
 
-    it('returns undefined if the word was not part of the round', () => {
-      expect(wordPositionForPlayer(round, 'wordX', p1.id)).toBeUndefined();
+    it('returns -1 if the word was not part of the round', () => {
+      expect(wordPositionForPlayer(round, 'wordX', p1.id)).toBe(-1);
     });
   });
 

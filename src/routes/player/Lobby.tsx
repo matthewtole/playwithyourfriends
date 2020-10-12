@@ -8,7 +8,11 @@ import {Loading} from '../../components/Loading';
 import {SortedPlayer} from '../../games/sorted/components/player/SortedPlayer';
 import {CREATE_GAME} from '../../games/sorted/mutations';
 import {createApolloClient} from '../../lib/apollo';
-import {GET_PLAYER_BY_ID, IGetPlayerByIdQuery, SET_ROOM_GAME} from '../../lib/room';
+import {
+  GET_PLAYER_BY_ID,
+  IGetPlayerByIdQuery,
+  SET_ROOM_GAME,
+} from '../../lib/room';
 
 export const LobbyWithApollo: React.FC<{id: string}> = ({id}) => {
   const client = createApolloClient();
@@ -21,10 +25,9 @@ export const LobbyWithApollo: React.FC<{id: string}> = ({id}) => {
 };
 
 const Lobby: React.FC<{id: string}> = ({id}) => {
-  const {data, loading, error} = useQuery<IGetPlayerByIdQuery>(
-    GET_PLAYER_BY_ID,
-    {variables: {id}}
-  );
+  const {data, loading} = useQuery<IGetPlayerByIdQuery>(GET_PLAYER_BY_ID, {
+    variables: {id},
+  });
   const [createGame] = useMutation(CREATE_GAME);
   const [setRoomGame] = useMutation(SET_ROOM_GAME);
 

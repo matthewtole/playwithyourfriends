@@ -5,14 +5,18 @@ import {Formik} from 'formik';
 import * as React from 'react';
 import {useParams} from 'react-router-dom';
 
-import {ApolloProvider, useLazyQuery, useMutation, useQuery} from '@apollo/client';
-import {useLocalStorage, writeStorage} from '@rehooks/local-storage';
+import {ApolloProvider, useLazyQuery, useMutation} from '@apollo/client';
+import {writeStorage} from '@rehooks/local-storage';
 
 import {Button} from '../../components/Button';
 import {TextInput} from '../../components/form/TextInput';
 import logo from '../../images/logo.svg';
 import {createApolloClient} from '../../lib/apollo';
-import {GET_ROOMS_BY_CODE, IGetRoomsByCodeQuery, JOIN_ROOM} from '../../lib/room';
+import {
+  GET_ROOMS_BY_CODE,
+  IGetRoomsByCodeQuery,
+  JOIN_ROOM,
+} from '../../lib/room';
 
 const NAME_REGEX = /^[a-zA-Z0-9_!?]{3,12}$/;
 const ROOM_REGEX = /^[0-9]{6}$/;
@@ -49,7 +53,7 @@ interface JoinFormProps {
 }
 
 const JoinForm: React.FC<JoinFormProps> = ({onJoin}) => {
-  let {roomCode} = useParams<{roomCode?: string}>();
+  const {roomCode} = useParams<{roomCode?: string}>();
 
   const [roomId, setRoomId] = React.useState<string | undefined>();
   const [player, setPlayer] = React.useState<
@@ -57,7 +61,7 @@ const JoinForm: React.FC<JoinFormProps> = ({onJoin}) => {
   >();
   const [showEmojiPicker, setShowEmojiPicker] = React.useState(false);
 
-  const [getRoomsByCode, {loading, data}] = useLazyQuery<IGetRoomsByCodeQuery>(
+  const [getRoomsByCode, {data}] = useLazyQuery<IGetRoomsByCodeQuery>(
     GET_ROOMS_BY_CODE
   );
 
@@ -76,10 +80,15 @@ const JoinForm: React.FC<JoinFormProps> = ({onJoin}) => {
     onJoin(roomId, player);
   }, [roomId, player]);
 
-  async function handleJoin(
-    {name, roomCode, emoji}: {name: string; roomCode: string; emoji: string},
-    setSubmitting: (submitting: boolean) => void
-  ) {
+  async function handleJoin({
+    name,
+    roomCode,
+    emoji,
+  }: {
+    name: string;
+    roomCode: string;
+    emoji: string;
+  }) {
     setPlayer({name: name.toUpperCase().trim(), emoji});
     getRoomsByCode({variables: {code: roomCode}});
   }
@@ -104,8 +113,8 @@ const JoinForm: React.FC<JoinFormProps> = ({onJoin}) => {
 
           return errors;
         }}
-        onSubmit={(values, {setSubmitting}) => {
-          handleJoin(values, setSubmitting);
+        onSubmit={values => {
+          handleJoin(values);
         }}
       >
         {({
