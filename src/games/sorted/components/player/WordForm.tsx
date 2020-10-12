@@ -4,7 +4,6 @@ import * as React from 'react';
 import {useMutation} from '@apollo/client';
 
 import {Button} from '../../../../components/Button';
-import {Card} from '../../../../components/Card';
 import {TextInput} from '../../../../components/form/TextInput';
 import {SUBMIT_WORDS} from '../../mutations';
 import {IGame} from '../../types';
@@ -23,17 +22,15 @@ export const WordForm: React.FC<{
       return;
     }
     setIsSubmitting(true);
-    await Promise.all(
-      words.map(w =>
-        submitWordsMutation({
-          variables: {
-            game: game.id,
-            player: playerId,
-            word: w,
-          },
-        })
-      )
-    );
+    for (const word of words) {
+      await submitWordsMutation({
+        variables: {
+          game: game.id,
+          player: playerId,
+          word,
+        },
+      });
+    }
     setIsSubmitting(false);
   }
 
@@ -50,9 +47,9 @@ export const WordForm: React.FC<{
         initialValues={{word: ''}}
         validate={values => {
           const errors: {[field: string]: string} = {};
-          if (values.word.length <= 1) {
+          if (values.word.trim().length <= 1) {
             errors.word = 'The word cannot be shorter than 2 characters';
-          } else if (values.word.length > 20) {
+          } else if (values.word.trim().length > 20) {
             errors.word = 'The word cannot be more than 20 characters';
           } else if (words.includes(values.word.toUpperCase().trim())) {
             errors.word = 'You cannot submit the same word twice';
