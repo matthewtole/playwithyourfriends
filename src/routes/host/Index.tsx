@@ -1,26 +1,16 @@
 import * as React from 'react';
 
-import {ApolloProvider, useMutation, useQuery} from '@apollo/client';
-import {
-  deleteFromStorage,
-  useLocalStorage,
-  writeStorage,
-} from '@rehooks/local-storage';
+import {ApolloProvider, useQuery} from '@apollo/client';
+import {deleteFromStorage, useLocalStorage} from '@rehooks/local-storage';
 
 import {Avatar} from '../../components/avatars/Avatar';
-import {Button} from '../../components/Button';
 import {Hand} from '../../components/host/Hand';
 import {Loading} from '../../components/Loading';
 import {HOST_ROOM_ID} from '../../config/local-storage';
 import {SortedHost} from '../../games/sorted/components/host/SortedHost';
 import {createApolloClient} from '../../lib/apollo';
-import {
-  CREATE_ROOM,
-  generateRoomCode,
-  GET_ROOM,
-  IGetRoomQuery,
-  IPlayer,
-} from '../../lib/room';
+import {GET_ROOM, IGetRoomQuery, IPlayer} from '../../lib/room';
+import {RoomCreation} from './Create';
 
 export const Host: React.FC = () => {
   const [id] = useLocalStorage<string>(HOST_ROOM_ID);
@@ -65,31 +55,6 @@ export const Host: React.FC = () => {
         <Hand roomCode={data.rooms_by_pk.code} />
       </div>
     </>
-  );
-};
-
-const RoomCreation: React.FC = () => {
-  const [createRoomMutation] = useMutation(CREATE_ROOM);
-
-  async function createRoom() {
-    const {data, errors} = await createRoomMutation({
-      variables: {code: generateRoomCode()},
-      optimisticResponse: false,
-      update: cache => {
-        console.log(cache);
-      },
-    });
-    if (data) {
-      writeStorage(HOST_ROOM_ID, data.insert_rooms_one.id);
-    } else if (errors) {
-      console.error(errors);
-    }
-  }
-
-  return (
-    <div>
-      <Button onClick={createRoom}>Create Room</Button>
-    </div>
   );
 };
 

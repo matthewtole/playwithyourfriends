@@ -44,7 +44,7 @@ export const DELETE_ROOM = gql`
 
 export const CREATE_ROOM = gql`
   mutation createRoom($code: String!) {
-    insert_rooms_one(object: {code: $code}) {
+    insert_rooms_oness(object: {code: $code}) {
       id
     }
   }

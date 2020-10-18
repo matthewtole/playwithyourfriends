@@ -51,6 +51,7 @@ export const SortedCards: React.FC<{
             {...provided.droppableProps}
             ref={provided.innerRef}
             className="px-2 space-y-2"
+            data-testid="drop"
           >
             {words.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>

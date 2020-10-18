@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 
 import * as React from 'react';
+import {act} from 'react-dom/test-utils';
 
 import randomEmoji from '@0xadada/random-emoji';
 import {MockedProvider} from '@apollo/react-testing';
@@ -138,6 +139,7 @@ describe('WordForm', () => {
 
   it('should submit the words when the Done button is clicked', async () => {
     const words = ['alpha', 'bravo', 'charlie', 'delta', 'echo'];
+    let mutationCalledCount = 0;
     render(
       <>
         <MockedProvider
@@ -150,7 +152,10 @@ describe('WordForm', () => {
                 word: word.toUpperCase(),
               },
             },
-            result: {data: {id: word}},
+            result: () => {
+              mutationCalledCount += 1;
+              return {data: {id: word}};
+            },
           }))}
         >
           <WordForm game={game} playerId={p1.id} />
@@ -165,6 +170,10 @@ describe('WordForm', () => {
     }
 
     await waitFor(() => expect(screen.getByText('Done')).toBeEnabled());
-    userEvent.click(screen.getByText('Done'));
+
+    await act(async () => {
+      userEvent.click(screen.getByText('Done'));
+      await waitFor(() => expect(mutationCalledCount).toBe(5));
+    });
   });
 });
