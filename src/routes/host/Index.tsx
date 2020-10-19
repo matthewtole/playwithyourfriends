@@ -70,7 +70,7 @@ const RoomPlayers: React.FC<{players: Array<IPlayer>}> = ({players}) => {
   );
 };
 
-export const HostWithApollo: React.FC = () => {
+const HostWithApollo: React.FC = () => {
   const client = createApolloClient();
 
   return (
@@ -81,3 +81,5 @@ export const HostWithApollo: React.FC = () => {
     </ApolloProvider>
   );
 };
+
+export default HostWithApollo;

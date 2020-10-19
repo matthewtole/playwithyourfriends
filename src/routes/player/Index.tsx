@@ -18,3 +18,5 @@ export const Player: React.FC = () => {
     </main>
   );
 };
+
+export default Player;

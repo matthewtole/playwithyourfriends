@@ -2,36 +2,32 @@ import * as React from 'react';
 import {hot} from 'react-hot-loader/root';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
-import {Admin} from './routes/admin/Index';
+import {Loading} from './components/Loading';
 import {Home} from './routes/Home';
-import {HostWithApollo} from './routes/host/Index';
-import {Player} from './routes/player/Index';
+
+const AsyncAdmin = React.lazy(() => import('./routes/admin/Index'));
+const AsyncHost = React.lazy(() => import('./routes/host/Index'));
+const AsyncPLayer = React.lazy(() => import('./routes/Player/Index'));
 
 export const App: React.FC = () => (
-  <Router>
-    <Switch>
-      <Route path="/admin">
-        <Admin />
-      </Route>
-      <Route path="/host">
-        <HostWithApollo />
-      </Route>
-      <Route path="/player/:roomCode?">
-        <Player />
-      </Route>
-      <Route path="/">
-        <Home />
-      </Route>
-    </Switch>
-    {/* {process.env.NODE_ENV !== 'production' ? (
-          <footer className="fixed bottom-0 flex justify-center w-screen p-2 space-x-4 text-white bg-black">
-            <Link to="/">Home</Link>
-            <Link to="/player">Player</Link>
-            <Link to="/host/">Host</Link>
-            <Link to="/admin/">Admin</Link>
-          </footer>
-        ) : null} */}
-  </Router>
+  <React.Suspense fallback={<Loading />}>
+    <Router>
+      <Switch>
+        <Route path="/admin">
+          <AsyncAdmin />
+        </Route>
+        <Route path="/host">
+          <AsyncHost />
+        </Route>
+        <Route path="/player/:roomCode?">
+          <AsyncPLayer />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </Router>
+  </React.Suspense>
 );
 
 export default hot(App);

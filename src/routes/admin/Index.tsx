@@ -117,3 +117,5 @@ export const RoomList: React.FC = () => {
     </table>
   );
 };
+
+export default Admin;
