@@ -63,8 +63,8 @@ const Lobby: React.FC<{id: string}> = ({id}) => {
   return (
     <main>
       <Header />
-      <section className="p-4">
-        <div className="p-4 bg-yellow-400">
+      <section>
+        <div className="px-8 py-4 text-lg leading-tight text-center text-white bg-black">
           <p className="mb-2">Hello, {player.name}!</p>
           <p>Waiting for the rest of the players to get here...</p>
         </div>

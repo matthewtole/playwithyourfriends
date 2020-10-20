@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom';
 import {ApolloProvider, useMutation, useQuery} from '@apollo/client';
 
 import {Button} from '../../components/Button';
+import {Header} from '../../components/Header';
 import {createApolloClient} from '../../lib/apollo';
 import {DELETE_ROOM, GET_ROOMS, IGetRoomsQuery} from '../../lib/room';
 
@@ -15,7 +16,8 @@ export const Admin: React.FC = () => {
 
   return (
     <ApolloProvider client={client}>
-      <main className="flex w-screen h-screen p-8 overflow-none">
+      <Header game="ADMIN CONSOLE" />
+      <main className="flex w-full p-8">
         <RoomList />
       </main>
     </ApolloProvider>

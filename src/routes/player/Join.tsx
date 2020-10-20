@@ -126,7 +126,10 @@ const JoinForm: React.FC<JoinFormProps> = ({onJoin}) => {
           isValid,
           setFieldValue,
         }) => (
-          <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+          <form
+            className="flex flex-col space-y-4 font-title"
+            onSubmit={handleSubmit}
+          >
             <fieldset className="flex flex-col space-y-1">
               <label htmlFor="name" className="text-white">
                 Your Name

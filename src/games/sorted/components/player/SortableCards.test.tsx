@@ -45,11 +45,19 @@ describe('SortableCards', () => {
     );
     mockDndElSpacing(el);
 
+    const cardToDrag = screen
+      .getByText('alpha')
+      .closest(DND_DRAGGABLE_DATA_ATTR);
+    expect(cardToDrag).not.toBeNull();
+
+    //TOOO: Hack to make Typescript happt
+    if (!cardToDrag) {
+      return;
+    }
+
     await makeDnd({
       getByText: screen.getByText,
-      getDragEl: () =>
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        screen.getByText('alpha').closest(DND_DRAGGABLE_DATA_ATTR)!,
+      getDragEl: () => cardToDrag,
       direction: DND_DIRECTION_DOWN,
       positions: 2,
     });
